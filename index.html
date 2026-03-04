@@ -1,262 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rifa de Páscoa 🐰</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-
-body{
-    background:linear-gradient(135deg,#ff758c,#ff7eb3);
-    display:flex;
-    justify-content:center;
-    padding:20px;
-}
-
-.container{
-    background:white;
-    width:100%;
-    max-width:750px;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.2);
-}
-
-h1{text-align:center;color:#e91e63;margin-bottom:10px;}
-.subtitle{text-align:center;margin-bottom:15px;color:#555;}
-.price{text-align:center;font-weight:bold;margin-bottom:10px;}
-.counter{text-align:center;font-size:14px;margin-bottom:15px;color:#777;}
-
-.legend{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    font-size:13px;
-    margin-bottom:15px;
-}
-
-.legend span{
-    display:flex;
-    align-items:center;
-    gap:5px;
-}
-
-.box{
-    width:14px;
-    height:14px;
-    border-radius:4px;
-}
-
-.available{background:#f1f1f1;}
-.selected{background:#4caf50;}
-.sold{background:#ccc;}
-
-.numbers{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(45px,1fr));
-    gap:8px;
-    margin-bottom:20px;
-    max-height:350px;
-    overflow-y:auto;
-}
-
-.number{
-    padding:10px;
-    text-align:center;
-    border-radius:8px;
-    cursor:pointer;
-    background:#f1f1f1;
-    font-weight:bold;
-    transition:.2s;
-}
-
-.number:hover{background:#e91e63;color:white;}
-.number.selected{background:#4caf50;color:white;}
-.number.sold{background:#ccc;color:#666;cursor:not-allowed;}
-
-.summary{
-    background:#fafafa;
-    padding:12px;
-    border-radius:10px;
-    margin-bottom:15px;
-    font-size:14px;
-}
-
-input,button{
-    width:100%;
-    padding:12px;
-    margin-bottom:15px;
-    border-radius:8px;
-    border:1px solid #ccc;
-}
-
-button{
-    background:#25D366;
-    color:white;
-    border:none;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.3s;
-}
-
-button:disabled{
-    background:#9e9e9e;
-    cursor:not-allowed;
-}
-
-.message{text-align:center;font-size:14px;font-weight:bold;}
-.loading{opacity:0.6;pointer-events:none;}
-
-@media(max-width:480px){
-    .number{padding:8px;font-size:13px;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa de Páscoa - Terceirão RH</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <script type="module" src="./main.js"></script>
 </head>
+
 <body>
+    <header>
+        <div class="div-terceirao">
+            <img src="./img/logo-terceirao.png" alt="" class="logo-terceirao">
+        </div>
+    </header>
 
-<div class="container">
-    <h1>🐰 Rifa de Páscoa 🍫</h1>
-    <div class="subtitle">Escolha quantos números quiser</div>
-    <div class="price">R$5,00 por número</div>
-    <div class="counter" id="counter">Carregando...</div>
+    <main>
+        <div class="container-pai">
+            <div class="container">
+                <h1>🐰 Rifa de Páscoa do Terceirão RH 🍫</h1>
+                <div class="subtitle">Escolha quantos números quiser</div>
+                <div class="price">R$3,50 por número</div>
+                <div class="counter" id="counter">Carregando...</div>
 
-    <div class="legend">
-        <span><div class="box available"></div> Disponível</span>
-        <span><div class="box selected"></div> Selecionado</span>
-        <span><div class="box sold"></div> Vendido</span>
-    </div>
+                <div class="legend">
+                    <span>
+                        <div class="box available"></div> Disponível
+                    </span>
+                    <span>
+                        <div class="box selected"></div> Selecionado
+                    </span>
+                    <span>
+                        <div class="box sold"></div> Vendido
+                    </span>
+                </div>
 
-    <div class="numbers" id="numbers"></div>
+                <div class="numbers" id="numbers"></div>
 
-    <div class="summary" id="summary">
-        Nenhum número selecionado.
-    </div>
+                <div class="summary" id="summary">
+                    Nenhum número selecionado.
+                </div>
 
-    <input type="text" id="name" placeholder="Seu nome">
+                <input type="text" id="name" placeholder="Seu nome">
+                <input type="text" id="turma" placeholder="Sua turma">
 
-    <button id="buyBtn">Reservar via WhatsApp</button>
-    <div class="message" id="message"></div>
-</div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA",
-  authDomain: "site-para-rifa-de-pascoa-25745.firebaseapp.com",
-  projectId: "site-para-rifa-de-pascoa-25745",
-  storageBucket: "site-para-rifa-de-pascoa-25745.firebasestorage.app",
-  messagingSenderId: "1004843167683",
-  appId: "1:1004843167683:web:93211e8925926723c3d776"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const numbersContainer=document.getElementById("numbers");
-const counter=document.getElementById("counter");
-const summary=document.getElementById("summary");
-const buyBtn=document.getElementById("buyBtn");
-const message=document.getElementById("message");
-
-let soldNumbers=[];
-let selectedNumbers=[];
-
-async function loadNumbers(){
-    const querySnapshot=await getDocs(collection(db,"rifa"));
-    querySnapshot.forEach(doc=>{
-        soldNumbers.push(doc.data().number);
-    });
-
-    createNumbers();
-    updateCounter();
-}
-
-function createNumbers(){
-    for(let i=1;i<=150;i++){
-        const div=document.createElement("div");
-        div.classList.add("number");
-        div.innerText=i;
-
-        if(soldNumbers.includes(i)){
-            div.classList.add("sold");
-        }
-
-        div.addEventListener("click",()=>{
-            if(soldNumbers.includes(i))return;
-
-            if(selectedNumbers.includes(i)){
-                selectedNumbers=selectedNumbers.filter(n=>n!==i);
-                div.classList.remove("selected");
-            }else{
-                selectedNumbers.push(i);
-                div.classList.add("selected");
-            }
-
-            updateSummary();
-        });
-
-        numbersContainer.appendChild(div);
-    }
-}
-
-function updateSummary(){
-    if(selectedNumbers.length===0){
-        summary.innerText="Nenhum número selecionado.";
-        return;
-    }
-
-    const total=selectedNumbers.length*5;
-    summary.innerHTML=
-        `Números: <strong>${selectedNumbers.join(", ")}</strong><br>
-         Total: <strong>R$${total.toFixed(2)}</strong>`;
-}
-
-function updateCounter(){
-    counter.innerText=`Disponíveis: ${150-soldNumbers.length} | Vendidos: ${soldNumbers.length}`;
-}
-
-buyBtn.addEventListener("click",async()=>{
-    const name=document.getElementById("name").value.trim();
-
-    if(!name){
-        message.innerText="Digite seu nome.";
-        return;
-    }
-
-    if(selectedNumbers.length===0){
-        message.innerText="Selecione pelo menos um número.";
-        return;
-    }
-
-    if(!confirm(`Confirmar reserva dos números ${selectedNumbers.join(", ")}?`)){
-        return;
-    }
-
-    buyBtn.disabled=true;
-    document.body.classList.add("loading");
-
-    for(let number of selectedNumbers){
-        await addDoc(collection(db,"rifa"),{
-            name:name,
-            number:number,
-            createdAt:new Date()
-        });
-    }
-
-    const phone="5511971254661";
-    const text=`Olá! Reservei os números ${selectedNumbers.join(", ")} da Rifa de Páscoa. Meu nome é ${name}. Total: R$${selectedNumbers.length*5}.`;
-    const url=`https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-
-    window.open(url,"_blank");
-    location.reload();
-});
-
-loadNumbers();
-</script>
-
+                <button id="buyBtn">Reservar via WhatsApp</button>
+                <div class="message" id="message"></div>
+            </div>
+        </div>
+    </main>
 </body>
+
 </html>
