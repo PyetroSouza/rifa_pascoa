@@ -63,6 +63,12 @@ h1 {
     margin-bottom: 10px;
 }
 
+.ovo {
+    height: 15rem;
+    width: 15rem;
+    margin: auto;
+}
+
 .counter {
     text-align: center;
     font-size: 14px;
