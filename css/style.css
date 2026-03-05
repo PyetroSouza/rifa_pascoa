@@ -184,6 +184,26 @@ button:disabled {
     pointer-events: auto;
     transform: translateX(-50%) translateY(0);
 }
+.payment-info {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #856404;
+    text-align: center;
+}
+
+.payment-info a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.payment-info a:hover {
+    text-decoration: underline;
+}
 
 @media(max-width:480px) {
     .number {
