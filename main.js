@@ -136,7 +136,16 @@ function mostrarTelaPagamento(numeros, nome, turma) {
 buyBtn.addEventListener("click", async () => {
     const name = document.getElementById("name").value.trim()
     const turma = document.getElementById("turma").value.trim()
+    const nomeInput = document.getElementById("name")
+    const nome = nomeInput.value.trim();
 
+    if (!/^[A-Za-zÀ-ÿ\s]+$/.test(nome)) {
+        alert("Digite um nome válido (apenas letras).")
+
+        nomeInput.value = ""
+        nomeInput.focus()
+        return;
+    }
     if (!name) return showToast("Digite seu nome.")
     if (!turma) return showToast("Escolha sua turma e turno.")
     if (selectedNumbers.length === 0) return showToast("Selecione pelo menos um número.")
