@@ -258,7 +258,7 @@ button:disabled {
     background: #25D366;
 }
 
-@media (max-width:600px) {
+@media (max-width: 480px) {
     .container {
         width: 100%;
         padding: 20px;
@@ -267,6 +267,10 @@ button:disabled {
     .pix-box {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .pix-box span {
+        font-size: 92%;
     }
 
     .pix-box button {
