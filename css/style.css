@@ -7,6 +7,10 @@ body {
     margin: 0;
 }
 
+header {
+    margin-bottom: 30px;
+}
+
 .div-terceirao {
     display: flex;
     width: 100%;
@@ -209,6 +213,14 @@ button:disabled {
     color: #0d6efd;
     text-decoration: none;
     font-weight: bold;
+}
+
+#chavePix {
+    cursor: pointer;
+}
+
+#chavePix:hover {
+    color: #0d6efd;
 }
 
 #tela-pagamento {

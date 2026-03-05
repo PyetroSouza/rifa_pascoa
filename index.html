@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rifa de Páscoa - Terceirão RH</title>
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/style.css">
-    <script type="module" src="./main.js"></script>
+    <script type="module" src="./main.js" defer></script>
+    <title>Rifa de Páscoa - Terceirão RH</title>
 </head>
-
 <body>
     <header>
         <div class="div-terceirao">
@@ -18,9 +16,7 @@
     </header>
 
     <main>
-
         <div class="container-pai" id="tela-principal">
-
             <div class="container">
                 <h1>🐰 Rifa de Páscoa do Terceirão RH 🍫</h1>
 
@@ -31,7 +27,6 @@
                 <div class="counter" id="counter">Carregando...</div>
 
                 <div class="legend">
-
                     <span>
                         <div class="box available"></div> Disponível
                     </span>
@@ -43,7 +38,6 @@
                     <span>
                         <div class="box sold"></div> Vendido
                     </span>
-
                 </div>
 
                 <div class="numbers" id="numbers"></div>
@@ -52,7 +46,7 @@
                     Nenhum número selecionado.
                 </div>
 
-                <input type="text" id="name" placeholder="Seu nome">
+                <input type="text" id="name" placeholder="Nome completo">
                 <input type="text" id="turma" placeholder="Sua turma">
 
                 <button id="buyBtn">Reservar números</button>
@@ -60,7 +54,6 @@
                 <div class="message" id="message"></div>
 
                 <div class="payment-info">
-
                     <p>💬 Entre em contato com a Manuela para confirmar o pagamento:</p>
 
                     <p>📱 WhatsApp:
@@ -73,21 +66,15 @@
 
                     <p>💰 Pagamento via PIX ou presencial.</p>
 
-                    <p>❖ PIX: <strong id="chavePix">000.000.000-00</strong></p>
-
+                    <p onclick="copiarPix()">❖ PIX: <strong id="chavePix">caixarecursoshumanos.etec@gmail.com</strong></p>
                 </div>
-
             </div>
-
         </div>
-
 
         <!-- TELA DE PAGAMENTO -->
         <div class="main">
-            <div id="tela-pagamento" style="display:none;">
-
+            <div id="tela-pagamento" style="display:none">
                 <div class="container">
-
                     <h2>💳 Finalizar pagamento</h2>
 
                     <p><strong>Números:</strong> <span id="numConfirmado"></span></p>
@@ -101,11 +88,9 @@
                     <h3>Pagamento via Pix</h3>
 
                     <div class="pix-box">
-
-                        <span id="pixKey">000.000.000-00</span>
+                        <span id="pixKey">caixarecursoshumanos.etec@gmail.com</span>
 
                         <button onclick="copiarPix()">Copiar</button>
-
                     </div>
 
                     <p>
@@ -116,15 +101,10 @@
                     <button id="btnWhatsapp">
                         Enviar comprovante para Manuela
                     </button>
-
                 </div>
-
             </div>
-
         </div>
-
     </main>
     </div>
 </body>
-
 </html>
