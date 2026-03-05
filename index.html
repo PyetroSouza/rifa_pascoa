@@ -73,7 +73,7 @@
                     <option value="Serviços Públicos Mód. 1 - Noite">Serviços Públicos Mód. 1 - Noite</option>
                     <option value="Serviços Públicos Mód. 2 - Noite">Serviços Públicos Mód. 2 - Noite</option>
                 </select>
-                
+
                 <button id="buyBtn">Reservar números</button>
 
                 <div class="message" id="message"></div>
@@ -98,36 +98,31 @@
         </div>
 
         <!-- TELA DE PAGAMENTO -->
-        <div class="main">
-            <div id="tela-pagamento" style="display:none">
-                <div class="container">
-                    <h2>💳 Finalizar pagamento</h2>
-
-                    <p><strong>Números:</strong> <span id="numConfirmado"></span></p>
-
-                    <p><strong>Nome:</strong> <span id="nomeConfirmado"></span></p>
-
-                    <p><strong>Turma:</strong> <span id="turmaConfirmada"></span></p>
-
-                    <hr>
-
-                    <h3>Pagamento via Pix</h3>
-
-                    <div class="pix-box">
-                        <span id="pixKey">caixarecursoshumanos.etec@gmail.com</span>
-
-                        <button onclick="copiarPix()">Copiar</button>
-                    </div>
-
-                    <p>
-                        <strong>Total:</strong>
-                        R$ <span id="valorFinal"></span>
-                    </p>
-
-                    <button id="btnWhatsapp">
-                        Enviar comprovante para Manuela
-                    </button>
+        <div class="container-pai" id="tela-pagamento" style="display:none">
+            <div class="container">
+                <h2>💳 Finalizar pagamento</h2>
+        
+                <p><strong>Números:</strong> <span id="numConfirmado"></span></p>
+                <p><strong>Nome:</strong> <span id="nomeConfirmado"></span></p>
+                <p><strong>Turma:</strong> <span id="turmaConfirmada"></span></p>
+        
+                <hr>
+        
+                <h3>Pagamento via Pix</h3>
+        
+                <div class="pix-box">
+                    <span id="pixKey">caixarecursoshumanos.etec@gmail.com</span>
+                    <button onclick="copiarPix()">Copiar</button>
                 </div>
+        
+                <p>
+                    <strong>Total:</strong>
+                    R$ <span id="valorFinal"></span>
+                </p>
+        
+                <button id="btnWhatsapp">
+                    Enviar comprovante para Manuela
+                </button>
             </div>
         </div>
     </main>

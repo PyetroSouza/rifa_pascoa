@@ -22,9 +22,17 @@ header {
     height: 100px;
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .container-pai {
     display: flex;
     justify-content: center;
+    align-items: center;
     padding: 20px;
 }
 
@@ -193,12 +201,6 @@ button:disabled {
     transform: translateX(-50%) translateY(0);
 }
 
-.main {
-    display: flex;
-    width: 100vw;
-    justify-content: center;
-}
-
 .payment-info {
     background: #fff3cd;
     border: 1px solid #ffeeba;
@@ -235,10 +237,15 @@ button:disabled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f3f3f3;
-    padding: 14px;
-    border-radius: 10px;
+    gap: 10px;
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 8px;
     margin: 10px 0;
+}
+
+.pix-box span {
+    word-break: break-all;
 }
 
 .pix-box button {
@@ -251,10 +258,23 @@ button:disabled {
     background: #25D366;
 }
 
-@media(max-width:480px) {
-
+@media (max-width:600px) {
     .container {
-        padding: 18px;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .pix-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pix-box button {
+        width: 100%;
+    }
+
+    #btnWhatsapp {
+        width: 100%;
     }
 
     .number {
@@ -265,5 +285,4 @@ button:disabled {
     .legend {
         flex-wrap: wrap;
     }
-
 }
