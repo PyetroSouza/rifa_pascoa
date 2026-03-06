@@ -1,17 +1,19 @@
 'use strict'
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
 import {
     getFirestore,
     collection,
-    getDocs,
+    onSnapshot,
     updateDoc,
     doc,
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+
 const firebaseConfig = {
-    apiKey: "AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA",
+    apiKey: "SUA_KEY",
     authDomain: "site-para-rifa-de-pascoa-25745.firebaseapp.com",
     projectId: "site-para-rifa-de-pascoa-25745",
     storageBucket: "site-para-rifa-de-pascoa-25745.appspot.com",
@@ -25,29 +27,30 @@ const db = getFirestore(app);
 const lista = document.getElementById("listaReservas");
 const stats = document.getElementById("stats");
 const searchInput = document.getElementById("searchInput");
-const agora = new Date()
-const date = agora.toLocaleDateString("pt-BR")
-const hora = agora.toLocaleTimeString("pt-BR")
 
 let reservas = [];
 
-async function carregarReservas() {
+function escutarReservas() {
 
-    lista.innerHTML = "Carregando...";
+    onSnapshot(collection(db, "rifa"), (snapshot) => {
 
-    const querySnapshot = await getDocs(collection(db, "rifa"));
+        reservas = [];
 
-    reservas = [];
+        snapshot.forEach((docSnap) => {
 
-    querySnapshot.forEach((docSnap) => {
-        reservas.push({
-            id: docSnap.id,
-            ...docSnap.data()
+            reservas.push({
+                id: docSnap.id,
+                ...docSnap.data()
+            });
+
         });
+
+        renderizarReservas(reservas);
+
     });
 
-    renderizarReservas(reservas);
 }
+
 
 function renderizarReservas(listaReservas) {
 
@@ -61,6 +64,17 @@ function renderizarReservas(listaReservas) {
         if (data.status === "vendido") vendidos++;
         if (data.status === "reservado") reservados++;
 
+        let dataFormatada = "-";
+        let horaFormatada = "-";
+
+        if (data.createdAt) {
+
+            const dataFirebase = new Date(data.createdAt)
+
+            dataFormatada = dataFirebase.toLocaleDateString("pt-BR")
+            horaFormatada = dataFirebase.toLocaleTimeString("pt-BR")
+
+        }
         const div = document.createElement("div");
 
         div.style.border = "1px solid #ccc";
@@ -69,18 +83,19 @@ function renderizarReservas(listaReservas) {
         div.style.borderRadius = "8px";
 
         div.innerHTML = `
-<strong><br>Número:</strong> ${data.number}<br><br>
+<strong>Número:</strong> ${data.number}<br><br>
 <strong>Nome:</strong> ${data.name}<br><br>
 <strong>Turma:</strong> ${data.turma}<br><br>
 <strong>Status:</strong> ${data.status}<br><br>
-<strong>Data:</strong> ${date}<br><br>
-<strong>Hora:</strong> ${hora}
+<strong>Data:</strong> ${dataFormatada}<br><br>
+<strong>Hora:</strong> ${horaFormatada}
 <br><br>
 <button onclick="confirmar('${data.id}')">Confirmar pagamento</button>
 <button onclick="cancelar('${data.id}')">Cancelar</button>
 `;
 
         lista.appendChild(div);
+
     });
 
     stats.innerHTML = `
@@ -88,30 +103,30 @@ function renderizarReservas(listaReservas) {
 <p>Reservados: <strong>${reservados}</strong></p>
 <p>Disponíveis: <strong>${150 - vendidos - reservados}</strong></p>
 `;
+
 }
 
+
 window.confirmar = async function (id) {
+
     await updateDoc(doc(db, "rifa", id), {
         status: "vendido"
     });
 
     alert("Pagamento confirmado!");
 
-    carregarReservas();
 }
 
+
 window.cancelar = async function (id) {
+
     await deleteDoc(doc(db, "rifa", id));
 
     alert("Reserva cancelada");
 
-    carregarReservas();
 }
 
-setInterval(() => {
-    location.reload();
-}, 20000);
-
+reservas.sort((a, b) => a.number - b.number)
 searchInput.addEventListener("input", () => {
 
     const termo = searchInput.value.toLowerCase();
@@ -125,4 +140,5 @@ searchInput.addEventListener("input", () => {
 
 });
 
-carregarReservas();
+
+escutarReservas();
