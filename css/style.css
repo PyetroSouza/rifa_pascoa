@@ -400,6 +400,10 @@ button:disabled {
         padding: 15px;
     }
 
+    .container-pai {
+        width: 100%;
+    }
+
     .container {
         width: 100%;
         padding: 20px;
