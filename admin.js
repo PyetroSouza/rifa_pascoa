@@ -26,7 +26,8 @@ const lista = document.getElementById("listaReservas");
 const stats = document.getElementById("stats");
 const searchInput = document.getElementById("searchInput");
 const agora = new Date()
-const dataHora = agora.toLocaleString("pt-BR")
+const date = agora.toLocaleDateString("pt-BR")
+const hora = agora.toLocaleTimeString("pt-BR")
 
 let reservas = [];
 
@@ -72,7 +73,8 @@ function renderizarReservas(listaReservas) {
 <strong>Nome:</strong> ${data.name}<br><br>
 <strong>Turma:</strong> ${data.turma}<br><br>
 <strong>Status:</strong> ${data.status}<br><br>
-<strong>Data:</strong> ${dataHora}
+<strong>Data:</strong> ${date}<br><br>
+<strong>Hora:</strong> ${hora}
 <br><br>
 <button onclick="confirmar('${data.id}')">Confirmar pagamento</button>
 <button onclick="cancelar('${data.id}')">Cancelar</button>
@@ -108,7 +110,7 @@ window.cancelar = async function (id) {
 
 setInterval(() => {
     location.reload();
-}, 10000);
+}, 20000);
 
 searchInput.addEventListener("input", () => {
 

@@ -21,7 +21,8 @@ const counter = document.getElementById("counter")
 const summary = document.getElementById("summary")
 const buyBtn = document.getElementById("buyBtn")
 const agora = new Date()
-const dataHora = agora.toLocaleString("pt-BR")
+const date = agora.toLocaleDateString("pt-BR")
+const hora = agora.toLocaleTimeString("pt-BR")
 
 let soldNumbers = []
 let selectedNumbers = []
@@ -172,7 +173,8 @@ buyBtn.addEventListener("click", async () => {
                 number,
                 status: "reservado",
                 createdAt: Date.now(),
-                dataHora
+                date,
+                hora
 
             });
         }
@@ -203,8 +205,7 @@ campoNome.addEventListener("input", function () {
 
     this.value = nome
 })
-setInterval(() => {
-    location.reload();
-}, 10000);
+
+
 
 loadNumbers()
