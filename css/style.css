@@ -77,8 +77,9 @@ h1 {
 }
 
 .ovo {
-    height: 25rem;
-    width: 25rem;
+    height: 22rem;
+    width: 22rem;
+     max-width: 80%;
     margin: auto;
     display: block;
     animation: float 4s ease-in-out infinite;
@@ -355,7 +356,8 @@ button:disabled {
     }
 
     .ovo {
-        width: 140px;
+        height: 13rem;
+        width: 13rem;
     }
 
 }
