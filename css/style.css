@@ -30,6 +30,7 @@ main {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    width: 45%;
 }
 
 .container {
@@ -76,7 +77,7 @@ h1 {
 .subtitle {
     text-align: center;
     margin-bottom: 8px;
-    color: #666;
+    color: #665;
     font-size: 14px;
 }
 
@@ -86,7 +87,6 @@ h1 {
     margin-bottom: 10px;
     font-size: 14px;
 }
-
 
 .premio-box {
     display: flex;
@@ -118,7 +118,8 @@ h1 {
     border-radius: 10px;
     font-size: 14px;
     color: #856404;
-    max-width: 90%;
+    max-width: 100%;
+    text-align: center;
 }
 
 .ovo:hover {
