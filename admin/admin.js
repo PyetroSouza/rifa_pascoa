@@ -61,8 +61,8 @@ function renderizarReservas(listaReservas) {
 
     listaReservas.forEach((data) => {
 
-        if (data.status === "vendido") vendidos++;
-        if (data.status === "reservado") reservados++;
+        if (data.status === "VENDIDO") vendidos++;
+        if (data.status === "RESERVADO") reservados++;
 
         let dataFormatada = "-";
         let horaFormatada = "-";
@@ -110,7 +110,7 @@ function renderizarReservas(listaReservas) {
 window.confirmar = async function (id) {
 
     await updateDoc(doc(db, "rifa", id), {
-        status: "vendido"
+        status: "VENDIDO"
     });
 
     alert("Pagamento confirmado!");
@@ -129,10 +129,10 @@ window.cancelar = async function (id) {
 reservas.sort((a, b) => a.number - b.number)
 searchInput.addEventListener("input", () => {
 
-    const termo = searchInput.value.toLowerCase();
+    const termo = searchInput.value.toUpperCase();
 
     const filtrados = reservas.filter((r) =>
-        r.name.toLowerCase().includes(termo) ||
+        r.name.toUpperCase().includes(termo) ||
         String(r.number).includes(termo)
     );
 
