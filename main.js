@@ -36,7 +36,7 @@ async function loadNumbers() {
 }
 
 function createNumbers() {
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 150; i++) {
         const div = document.createElement("div")
 
         div.classList.add("number")
