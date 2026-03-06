@@ -373,7 +373,7 @@ button:disabled {
 @media (max-width: 1024px) {
 
     .container-pai {
-        width: 100%;
+        width: 90%;
     }
 
     .premio {
