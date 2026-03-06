@@ -61,17 +61,15 @@ function renderizarReservas(listaReservas) {
 
     listaReservas.forEach((data) => {
 
-        let dataUpper = String(data).toUpperCase()
-
-        if (dataUpper.status === "VENDIDO") vendidos++;
-        if (dataUpper.status === "RESERVADO") reservados++;
+        if (data.status === "VENDIDO") vendidos++;
+        if (data.status === "RESERVADO") reservados++;
 
         let dataFormatada = "-";
         let horaFormatada = "-";
 
-        if (dataUpper.createdAt) {
+        if (data.createdAt) {
 
-            const dataFirebase = new Date(dataUpper.createdAt)
+            const dataFirebase = new Date(data.createdAt)
 
             dataFormatada = dataFirebase.toLocaleDateString("pt-BR")
             horaFormatada = dataFirebase.toLocaleTimeString("pt-BR")
@@ -85,15 +83,15 @@ function renderizarReservas(listaReservas) {
         div.style.borderRadius = "8px";
 
         div.innerHTML = `
-<strong>Número:</strong> ${dataUpper.number}<br><br>
-<strong>Nome:</strong> ${dataUpper.name}<br><br>
-<strong>Turma:</strong> ${dataUpper.turma}<br><br>
-<strong>Status:</strong> ${dataUpper.status}<br><br>
+<strong>Número:</strong> ${data.number}<br><br>
+<strong>Nome:</strong> ${data.name}<br><br>
+<strong>Turma:</strong> ${data.turma}<br><br>
+<strong>Status:</strong> ${data.status}<br><br>
 <strong>Data:</strong> ${dataFormatada}<br><br>
 <strong>Hora:</strong> ${horaFormatada}
 <br><br>
-<button onclick="confirmar('${dataUpper.id}')">Confirmar pagamento</button>
-<button onclick="cancelar('${dataUpper.id}')">Cancelar</button>
+<button onclick="confirmar('${data.id}')">Confirmar pagamento</button>
+<button onclick="cancelar('${data.id}')">Cancelar</button>
 `;
 
         lista.appendChild(div);
