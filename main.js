@@ -40,30 +40,35 @@ async function loadNumbers() {
 
 function createNumbers() {
     for (let i = 1; i <= 150; i++) {
-        const div = document.createElement("div")
 
-        div.classList.add("number")
-        div.innerText = i
+        setTimeout(() => {
 
-        if (soldNumbers.includes(i)) {
-            div.classList.add("sold")
-        }
+            const div = document.createElement("div")
 
-        div.addEventListener("click", () => {
-            if (soldNumbers.includes(i)) return
+            div.classList.add("number")
+            div.innerText = i
 
-            if (selectedNumbers.includes(i)) {
-                selectedNumbers = selectedNumbers.filter(n => n !== i)
-                div.classList.remove("selected")
-            } else {
-                selectedNumbers.push(i)
-                div.classList.add("selected")
-
+            if (soldNumbers.includes(i)) {
+                div.classList.add("sold")
             }
-            updateSummary()
-        })
 
-        numbersContainer.appendChild(div)
+            div.addEventListener("click", () => {
+                if (soldNumbers.includes(i)) return
+
+                if (selectedNumbers.includes(i)) {
+                    selectedNumbers = selectedNumbers.filter(n => n !== i)
+                    div.classList.remove("selected")
+                } else {
+                    selectedNumbers.push(i)
+                    div.classList.add("selected")
+                }
+
+                updateSummary()
+            })
+
+            numbersContainer.appendChild(div)
+
+        }, i * 10)
     }
 }
 
