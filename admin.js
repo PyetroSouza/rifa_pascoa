@@ -44,7 +44,7 @@ function escutarReservas() {
             });
 
         });
-        reservas.sort((a, b) => a.number - b.number)
+        // reservas.sort((a, b) => a.number - b.number)
         renderizarReservas(reservas);
 
     });

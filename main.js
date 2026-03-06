@@ -1,13 +1,13 @@
 'use strict'
 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
+
 import {
-    getFirestore,
-    collection,
-    getDocs,
-    doc,
-    setDoc,
-    getDoc,
-    runTransaction
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  runTransaction
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
 
 const firebaseConfig = {
@@ -225,7 +225,5 @@ campoNome.addEventListener("input", function () {
 
     this.value = nome
 })
-
-
 
 loadNumbers()
