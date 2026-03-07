@@ -40,22 +40,6 @@ const searchInput = document.getElementById('searchInput')
 
 let reservas = []
 
-function showToast(msg, duration = 3000) {
-    let toast = document.createElement('div')
-
-    toast.className = 'toast'
-    toast.innerText = msg
-
-    document.body.appendChild(toast)
-
-    setTimeout(() => toast.classList.add('show'), 100)
-
-    setTimeout(() => {
-        toast.classList.remove('show')
-        setTimeout(() => document.body.removeChild(toast), 300)
-    }, duration)
-}
-
 function escutarReservas() {
     onSnapshot(collection(db, 'rifa'), (snapshot) => {
         reservas = []
@@ -69,7 +53,6 @@ function escutarReservas() {
 
         })
 
-        // ordenar números
         reservas.sort((a, b) => a.number - b.number)
 
         renderizarReservas(reservas)
@@ -83,8 +66,10 @@ function renderizarReservas(listaReservas) {
     let reservados = 0
 
     listaReservas.forEach((data) => {
-        if (data.status === 'VENDIDO') vendidos++
-        if (data.status === 'reservado') reservados++
+        const status = (data.status || '').toLowerCase()
+
+        if (status === 'vendido') vendidos++
+        if (status === 'reservado') reservados++
 
         let dataFormatada = '-'
         let horaFormatada = '-'
@@ -104,12 +89,12 @@ function renderizarReservas(listaReservas) {
         div.style.borderRadius = '8px'
 
         div.innerHTML = `
-<strong>Número:</strong> ${data.number}<br><br>
-<strong>Nome:</strong> ${data.name}<br><br>
-<strong>Turma:</strong> ${data.turma}<br><br>
-<strong>Status:</strong> ${data.status}<br><br>
-<strong>Data:</strong> ${dataFormatada}<br><br>
-<strong>Hora:</strong> ${horaFormatada}
+<strong>NÚMERO:</strong> ${data.number}<br><br>
+<strong>NOME:</strong> ${data.name}<br><br>
+<strong>TURMA:</strong> ${data.turma.toUpperCase()}<br><br>
+<strong>STATUS:</strong> ${data.status.toUpperCase()}<br><br>
+<strong>DATA:</strong> ${dataFormatada}<br><br>
+<strong>HORA:</strong> ${horaFormatada}
 <br><br>
 <button onclick="confirmar('${data.id}')">Confirmar pagamento</button>
 <button onclick="cancelar('${data.id}')">Cancelar</button>
@@ -118,10 +103,12 @@ function renderizarReservas(listaReservas) {
         lista.appendChild(div)
     })
 
+    const disponiveis = 150 - vendidos - reservados
+
     stats.innerHTML = `
 <p>Vendidos: <strong>${vendidos}</strong></p>
 <p>Reservados: <strong>${reservados}</strong></p>
-<p>Disponíveis: <strong>${150 - vendidos - reservados}</strong></p>
+<p>Disponíveis: <strong>${disponiveis}</strong></p>
 `
 }
 
@@ -131,10 +118,10 @@ window.confirmar = async function (id) {
             status: 'VENDIDO'
         })
 
-        showToast('Pagamento confirmado!')
+        alert('Pagamento confirmado!')
     } catch (error) {
         console.error(error)
-        showToast('Erro ao confirmar pagamento.')
+        alert('Erro ao confirmar pagamento.')
     }
 }
 
@@ -146,10 +133,10 @@ window.cancelar = async function (id) {
     try {
         await deleteDoc(doc(db, 'rifa', id))
 
-        showToast('Reserva cancelada!')
+        alert('Reserva cancelada!')
     } catch (error) {
         console.error(error)
-        showToast('Erro ao cancelar reserva.')
+        alert('Erro ao cancelar reserva.')
     }
 }
 
