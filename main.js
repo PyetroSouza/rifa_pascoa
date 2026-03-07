@@ -1,6 +1,6 @@
-/*********************************************************************************************
- * Objetivo: Arquivo responsável por controlar a parte principal do site,
-onde os usuários podem selecionar os números da rifa, inserir seus dados e finalizar a compra.
+/*****************************************************************************************
+ * Objetivo: Arquivo responsável por controlar a parte principal do site, onde os usuários
+   podem selecionar os números da rifa, inserir seus dados e finalizar a compra.
  * Data: 04/03/2026 (quarta-feira)
  * Autor(es):
     - Gustavo Vidal de Abreu
@@ -8,17 +8,17 @@ onde os usuários podem selecionar os números da rifa, inserir seus dados e fin
     - Kayque Brenno Ferreira Almeida
     - Pyetro Ferreira de Souza
  * Versão: 2.4
-**********************************************************************************************/
+*****************************************************************************************/
 
 'use strict'
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
 import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  runTransaction
+    getFirestore,
+    collection,
+    getDocs,
+    doc,
+    runTransaction
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
 
 const firebaseConfig = {
@@ -134,35 +134,11 @@ function copiarPix() {
 
 window.copiarPix = copiarPix
 
-function mostrarTelaPagamento(numeros, nome, turma) {
-    const total = (numeros.length * 3.5).toFixed(2)
-
-    document.getElementById("numConfirmado").innerText = numeros.join(", ")
-    document.getElementById("nomeConfirmado").innerText = nome
-    document.getElementById("turmaConfirmada").innerText = turma
-    document.getElementById("valorFinal").innerText = total
-
-    document.getElementById("tela-principal").style.display = "none"
-    document.getElementById("tela-pagamento").style.display = "block"
-
-    const mensagem = `Olá, Manuela! Comprei os números ${numeros.join(", ")}.
-        Nome: ${nome}
-        Turma: ${turma}
-        Total: R$ ${total}`
-
-    document.getElementById("btnWhatsapp").onclick = function () {
-        window.open(
-            `https://wa.me/5511946168749?text=${encodeURIComponent(mensagem)}`,
-            "_blank"
-        )
-    }
-}
-
 buyBtn.addEventListener("click", async () => {
     const name = document.getElementById("name").value.trim()
     const turma = document.getElementById("turma").value.trim()
     const nomeInput = document.getElementById("name")
-    const nomeSemNum = nomeInput.value.trim();
+    const nomeSemNum = nomeInput.value.trim()
 
     if (selectedNumbers.length === 0) return showToast("Selecione pelo menos um número.")
     if (!/^[A-Za-zÀ-ÿ\s]+$/.test(nomeSemNum)) {
@@ -176,13 +152,10 @@ buyBtn.addEventListener("click", async () => {
     buyBtn.disabled = true
 
     try {
-
         for (let number of selectedNumbers) {
-
             const ref = doc(db, "rifa", number.toString())
 
             await runTransaction(db, async (transaction) => {
-
                 const snap = await transaction.get(ref)
 
                 if (snap.exists()) {
@@ -196,22 +169,18 @@ buyBtn.addEventListener("click", async () => {
                     status: "reservado",
                     createdAt: Date.now()
                 })
-
             })
-
         }
 
-        mostrarTelaPagamento(selectedNumbers, name, turma)
+        localStorage.setItem("numeros", JSON.stringify(selectedNumbers))
+        localStorage.setItem("nome", name)
+        localStorage.setItem("turma", turma)
 
+        window.location.href = "./pages/pagamento.html"
     } catch (e) {
-
         showToast("Um dos números já foi reservado por outra pessoa.")
-
+        buyBtn.disabled = false
     }
-
-    mostrarTelaPagamento(selectedNumbers, name, turma)
-
-    buyBtn.disabled = false
 })
 
 
@@ -219,11 +188,10 @@ const campoNome = document.getElementById("name")
 
 
 campoNome.addEventListener("input", function () {
-
     let nome = this.value
 
     nome = nome.replace(/[^A-Za-zÀ-ÿ\s]/g, "")
-    nome = nome.toLowerCase();
+    nome = nome.toUpperCase()
 
     nome = nome.split(" ").map(palavra => {
         if (palavra.length > 0) {

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="../img/logo-terceirao.jpg">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="module" src="./pagamento.js" defer></script>
+    <title>Pagamento - Rifa de Páscoa - Terceirão RH</title>
+</head>
+<body>
+    <main>
+        <div class="container-pai" id="tela-pagamento">
+            <div class="container">
+                <h2>💳 Finalizar pagamento</h2>
+
+                <p><strong>Números:</strong> <span id="numConfirmado"></span></p>
+                <p><strong>Nome:</strong> <span id="nomeConfirmado"></span></p>
+                <p><strong>Turma:</strong> <span id="turmaConfirmada"></span></p>
+
+                <hr>
+
+                <h3>Pagamento via Pix</h3>
+
+                <div class="pix-box">
+                    <span id="pixKey">caixarecursoshumanos.etec@gmail.com</span>
+                    <button onclick="copiarPix()">Copiar</button>
+                </div>
+
+                <p>
+                    <strong>Total:</strong>
+                    R$ <span id="valorFinal"></span>
+                </p>
+
+                <button id="btnWhatsapp">
+                    Enviar comprovante para Manuela
+                </button>
+                <a href="../index.html">
+                    <button>Voltar</button>
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

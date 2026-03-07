@@ -346,6 +346,13 @@ button:disabled {
     font-weight: bold;
 }
 
+.instas .sala {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
 .lista-devs {
     display: flex;
     flex-direction: column;

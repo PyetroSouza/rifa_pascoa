@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +9,7 @@
     <script type="module" src="./main.js" defer></script>
     <title>Rifa de Páscoa - Terceirão RH</title>
 </head>
-
 <body>
-    <header>
-        <div class="div-terceirao">
-            <img src="img/logo-terceirao.jpg" alt="" class="logo-terceirao">
-        </div>
-    </header>
-
     <main>
         <div class="container-pai" id="tela-principal">
             <div class="container">
@@ -57,8 +49,8 @@
                     Nenhum número selecionado.
                 </div>
 
-                <input type="text" id="name" maxlength="40" placeholder="Nome completo" inputmode="text"
-                    pattern="[A-Za-zÀ-ÿ\s]+">
+                <input type="text" id="name" maxlength="40" placeholder="Nome completo" inputmode="text" pattern="[A-Za-zÀ-ÿ\s]+">
+                
                 <select id="turma">
                     <option value="">Selecione sua turma</option>
                     <option value="Professor(a)">Professor(a)</option>
@@ -101,16 +93,16 @@
 
                     <p>💰 Pagamento via PIX ou presencial.</p>
 
-                    <p onclick="copiarPix()">❖ PIX: <strong id="chavePix">caixarecursoshumanos.etec@gmail.com</strong>
-                    </p>
+                    <p onclick="copiarPix()">❖ PIX: <strong id="chavePix">caixarecursoshumanos.etec@gmail.com</strong></p>
                 </div>
 
                 <div class="instas">
-                    <p>Acesse o nosso instagram:
-                        <a href="https://www.instagram.com/terceirorh_etec/">
-                            terceirorh_etec 📸
+                    <p class="sala">Acesse o nosso instagram:
+                        <a href="https://www.instagram.com/terceirorh_etec/" class="dev-link">
+                            📷 terceirorh_etec
                         </a>
                     </p>
+
                     <div class="lista-devs">
                         <p>Conheça nossos desenvolvedores:</p>
 
@@ -133,46 +125,10 @@
                             <span class="icon">📷</span>
                             pye_souza14
                         </a>
-
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-
-        <!-- TELA DE PAGAMENTO -->
-        <div class="container-pai" id="tela-pagamento" style="display:none">
-            <div class="container">
-                <h2>💳 Finalizar pagamento</h2>
-
-                <p><strong>Números:</strong> <span id="numConfirmado"></span></p>
-                <p><strong>Nome:</strong> <span id="nomeConfirmado"></span></p>
-                <p><strong>Turma:</strong> <span id="turmaConfirmada"></span></p>
-
-                <hr>
-
-                <h3>Pagamento via Pix</h3>
-
-                <div class="pix-box">
-                    <span id="pixKey">caixarecursoshumanos.etec@gmail.com</span>
-                    <button onclick="copiarPix()">Copiar</button>
-                </div>
-
-                <p>
-                    <strong>Total:</strong>
-                    R$ <span id="valorFinal"></span>
-                </p>
-
-                <button id="btnWhatsapp">
-                    Enviar comprovante para Manuela
-                </button>
-                <a href="./index.html">
-                    <button>Voltar</button>
-                </a>
-            </div>
-        </div>
     </main>
-    </div>
 </body>
-
 </html>
