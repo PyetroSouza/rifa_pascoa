@@ -43,6 +43,38 @@ main {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    position: relative;
+    margin-top: 50px;
+}
+
+.container::before {
+    content: "🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫";
+    position: absolute;
+    top: -25px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    animation: flutuar-emoji 4s ease-in-out infinite;
+}
+
+@keyframes flutuar-emoji {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-2px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.titulo-rgb {
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
@@ -103,7 +135,7 @@ h1 {
     object-fit: contain;
     margin: auto;
     display: block;
-    animation: float 4s ease-in-out infinite;
+    animation: flutuar 4s ease-in-out infinite;
     transition: 0.4s;
 }
 
@@ -126,7 +158,7 @@ h1 {
     transform: scale(1.05);
 }
 
-@keyframes float {
+@keyframes flutuar {
     0% {
         transform: translateY(0px);
     }
@@ -454,6 +486,12 @@ button:disabled {
         padding: 20px;
     }
 
+    .container::before {
+        content: "🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫";
+        font-size: 20px;
+        top: -18px;
+    }
+
     .pix-box {
         flex-direction: column;
         align-items: flex-start;
@@ -488,5 +526,9 @@ button:disabled {
 
     .legend {
         flex-wrap: wrap;
+    }
+
+    .sala {
+        flex-direction: column;
     }
 }

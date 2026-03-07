@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +10,17 @@
     <script type="module" src="./main.js" defer></script>
     <title>Rifa de Páscoa - Terceirão RH</title>
 </head>
+
 <body>
+
     <main>
+
         <div class="container-pai" id="tela-principal">
             <div class="container">
-                <h1>🐰 Rifa de Páscoa 🍫<br>Terceirão RH </h1>
+                <div class="titulo-rgb">
+                    <h1> Rifa de Páscoa </h1>
+                    <h1> Terceirão RH </h1>
+                </div>
 
                 <div class="subtitle">Escolha quantos números quiser</div>
 
@@ -49,8 +56,9 @@
                     Nenhum número selecionado.
                 </div>
 
-                <input type="text" id="name" maxlength="40" placeholder="Digite seu nome completo" inputmode="text" pattern="[A-Za-zÀ-ÿ\s]+">
-                
+                <input type="text" id="name" maxlength="40" placeholder="Digite seu nome completo" inputmode="text"
+                    pattern="[A-Za-zÀ-ÿ\s]+">
+
                 <select id="turma">
                     <option value="">Selecione sua turma</option>
                     <option value="Professor(a)">Professor(a)</option>
@@ -93,7 +101,8 @@
 
                     <p>💰 Pagamento via PIX ou presencial.</p>
 
-                    <p onclick="copiarPix()">❖ PIX: <strong id="chavePix">caixarecursoshumanos.etec@gmail.com</strong></p>
+                    <p onclick="copiarPix()">❖ PIX: <strong id="chavePix">caixarecursoshumanos.etec@gmail.com</strong>
+                    </p>
                 </div>
 
                 <div class="instas">
@@ -131,4 +140,5 @@
         </div>
     </main>
 </body>
+
 </html>
