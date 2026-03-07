@@ -26,7 +26,7 @@ const firebaseConfig = {
     apiKey: 'AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA',
     authDomain: 'site-para-rifa-de-pascoa-25745.firebaseapp.com',
     projectId: 'site-para-rifa-de-pascoa-25745',
-    storageBucket: 'site-para-rifa-de-pascoa-25745.firebasestorage.app',
+    storageBucket: 'site-para-rifa-de-pascoa-25745.appspot.com',
     messagingSenderId: '1004843167683',
     appId: '1:1004843167683:web:93211e8925926723c3d776'
 }
@@ -40,11 +40,28 @@ const searchInput = document.getElementById('searchInput')
 
 let reservas = []
 
+function showToast(msg, duration = 3000) {
+    let toast = document.createElement('div')
+
+    toast.className = 'toast'
+    toast.innerText = msg
+
+    document.body.appendChild(toast)
+
+    setTimeout(() => toast.classList.add('show'), 100)
+
+    setTimeout(() => {
+        toast.classList.remove('show')
+        setTimeout(() => document.body.removeChild(toast), 300)
+    }, duration)
+}
+
 function escutarReservas() {
     onSnapshot(collection(db, 'rifa'), (snapshot) => {
         reservas = []
 
         snapshot.forEach((docSnap) => {
+
             reservas.push({
                 id: docSnap.id,
                 ...docSnap.data()
@@ -52,7 +69,9 @@ function escutarReservas() {
 
         })
 
-        // reservas.sort((a, b) => a.number - b.number)
+        // ordenar números
+        reservas.sort((a, b) => a.number - b.number)
+
         renderizarReservas(reservas)
     })
 }
@@ -71,12 +90,10 @@ function renderizarReservas(listaReservas) {
         let horaFormatada = '-'
 
         if (data.createdAt) {
-
             const dataFirebase = new Date(data.createdAt)
 
             dataFormatada = dataFirebase.toLocaleDateString('pt-BR')
             horaFormatada = dataFirebase.toLocaleTimeString('pt-BR')
-
         }
 
         const div = document.createElement('div')
@@ -94,8 +111,8 @@ function renderizarReservas(listaReservas) {
 <strong>Data:</strong> ${dataFormatada}<br><br>
 <strong>Hora:</strong> ${horaFormatada}
 <br><br>
-<button onclick='confirmar('${data.id}')'>Confirmar pagamento</button>
-<button onclick='cancelar('${data.id}')'>Cancelar</button>
+<button onclick="confirmar('${data.id}')">Confirmar pagamento</button>
+<button onclick="cancelar('${data.id}')">Cancelar</button>
 `
 
         lista.appendChild(div)
@@ -106,25 +123,35 @@ function renderizarReservas(listaReservas) {
 <p>Reservados: <strong>${reservados}</strong></p>
 <p>Disponíveis: <strong>${150 - vendidos - reservados}</strong></p>
 `
-
 }
 
 window.confirmar = async function (id) {
-    await updateDoc(doc(db, 'rifa', id), {
-        status: 'VENDIDO'
-    })
+    try {
+        await updateDoc(doc(db, 'rifa', id), {
+            status: 'VENDIDO'
+        })
 
-    alert('Pagamento confirmado!')
-
+        showToast('Pagamento confirmado!')
+    } catch (error) {
+        console.error(error)
+        showToast('Erro ao confirmar pagamento.')
+    }
 }
 
 window.cancelar = async function (id) {
-    await deleteDoc(doc(db, 'rifa', id))
+    const confirmar = confirm('Tem certeza que deseja cancelar esta reserva?')
 
-    alert('Reserva cancelada')
+    if (!confirmar) return
+
+    try {
+        await deleteDoc(doc(db, 'rifa', id))
+
+        showToast('Reserva cancelada!')
+    } catch (error) {
+        console.error(error)
+        showToast('Erro ao cancelar reserva.')
+    }
 }
-
-reservas.sort((a, b) => a.number - b.number)
 
 searchInput.addEventListener('input', () => {
     const termo = searchInput.value.toUpperCase()
