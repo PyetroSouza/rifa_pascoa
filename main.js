@@ -1,7 +1,18 @@
+/*********************************************************************************************
+ * Objetivo: Arquivo responsável por controlar a parte principal do site,
+onde os usuários podem selecionar os números da rifa, inserir seus dados e finalizar a compra.
+ * Data: 04/03/2026 (quarta-feira)
+ * Autor(es):
+    - Gustavo Vidal de Abreu
+    - Kauan Alves Pereira
+    - Kayque Brenno Ferreira Almeida
+    - Pyetro Ferreira de Souza
+ * Versão: 2.4
+**********************************************************************************************/
+
 'use strict'
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
-
 import {
   getFirestore,
   collection,

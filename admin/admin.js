@@ -1,7 +1,18 @@
+/*********************************************************************************
+ * Objetivo: Arquivo responsável por controlar a parte administrativa do site,
+ onde é possível visualizar as reservas, confirmar pagamentos e cancelar reservas.
+ * Data: 05/03/2026 (quinta-feira)
+ * Autor(es):
+    - Gustavo Vidal de Abreu
+    - Kauan Alves Pereira
+    - Kayque Brenno Ferreira Almeida
+    - Pyetro Ferreira de Souza
+ * Versão: 2.0
+*********************************************************************************/
+
 'use strict'
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import {
     getFirestore,
     collection,
@@ -11,15 +22,14 @@ import {
     deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-
 const firebaseConfig = {
-    apiKey: "SUA_KEY",
+    apiKey: "AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA",
     authDomain: "site-para-rifa-de-pascoa-25745.firebaseapp.com",
     projectId: "site-para-rifa-de-pascoa-25745",
-    storageBucket: "site-para-rifa-de-pascoa-25745.appspot.com",
+    storageBucket: "site-para-rifa-de-pascoa-25745.firebasestorage.app",
     messagingSenderId: "1004843167683",
     appId: "1:1004843167683:web:93211e8925926723c3d776"
-};
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
