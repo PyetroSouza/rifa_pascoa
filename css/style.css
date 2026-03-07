@@ -50,11 +50,11 @@ main {
 .container::before {
     content: "🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫";
     position: absolute;
-    top: -25px;
+    top: -22px;
     left: 0;
     width: 100%;
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     animation: flutuar-emoji 4s ease-in-out infinite;
 }
 
