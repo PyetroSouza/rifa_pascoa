@@ -43,41 +43,6 @@ main {
     display: flex;
     flex-direction: column;
     gap: 15px;
-<<<<<<< HEAD
-    position: relative;
-    margin-top: 50px;
-}
-
-.container::before {
-    content: "🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 ";
-    position: absolute;
-    top: -25px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 28px;
-    animation: flutuar-emoji 4s ease-in-out infinite;
-}
-
-@keyframes flutuar-emoji {
-    0% {
-        transform: translateY(0px);
-    }
-
-    50% {
-        transform: translateY(-2px);
-    }
-
-    100% {
-        transform: translateY(0px);
-    }
-}
-
-.titulo-rgb {
-    display: flex;
-    flex-direction: column;
-=======
->>>>>>> 99df67cdde205e955914f8a346334bac0db43350
 }
 
 h1 {

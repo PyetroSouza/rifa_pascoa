@@ -131,6 +131,28 @@ function copiarPix() {
 
     showToast('Chave Pix copiada!')
 }
+function chuvaDePascoa() {
+
+    for (let i = 0; i < 40; i++) {
+
+        const egg = document.createElement("div")
+        egg.className = "egg"
+
+        const ovos = ["🥚", "🐰", "🍫", "🥕"]
+        egg.innerText = ovos[Math.floor(Math.random() * ovos.length)]
+
+        egg.style.left = Math.random() * 100 + "vw"
+        egg.style.animationDuration = (Math.random() * 3 + 2) + "s"
+
+        document.body.appendChild(egg)
+
+        setTimeout(() => {
+            egg.remove()
+        }, 5000)
+    }
+
+}
+
 
 window.copiarPix = copiarPix
 
@@ -169,6 +191,7 @@ buyBtn.addEventListener('click', async () => {
                     status: 'reservado',
                     createdAt: Date.now()
                 })
+
             })
         }
 
@@ -176,7 +199,14 @@ buyBtn.addEventListener('click', async () => {
         localStorage.setItem('nome', name)
         localStorage.setItem('turma', turma)
 
-        window.location.href = './pages/pagamento.html'
+
+        chuvaDePascoa()
+
+
+        setTimeout(() => {
+            window.location.href = "./pages/pagamento.html"
+        }, 2000)
+
     } catch (e) {
         showToast('Um dos números já foi reservado por outra pessoa.')
         buyBtn.disabled = false
