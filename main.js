@@ -55,6 +55,38 @@ function atualizarBarra(vendidos, total) {
         porcentagem + "% Vendidos";
 
 }
+function iniciarContador() {
+
+    const dataSorteio = new Date("April 3, 2026 0:00:00").getTime()
+
+    const intervalo = setInterval(() => {
+
+        const agora = new Date().getTime()
+
+        const distancia = dataSorteio - agora
+
+        const dias = Math.floor(distancia / (1000 * 60 * 60 * 24))
+        const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60))
+        const segundos = Math.floor((distancia % (1000 * 60)) / 1000)
+
+        document.getElementById("days").innerText = dias
+        document.getElementById("hours").innerText = horas
+        document.getElementById("minutes").innerText = minutos
+        document.getElementById("seconds").innerText = segundos
+
+        if (distancia < 0) {
+
+            clearInterval(intervalo)
+
+            document.getElementById("countdown").innerHTML =
+                "🎉 SORTEIO ENCERRADO!"
+        }
+
+    }, 1000)
+}
+
+iniciarContador()
 function confete() {
 
     for (let i = 0; i < 120; i++) {
