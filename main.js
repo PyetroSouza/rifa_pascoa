@@ -44,10 +44,11 @@ const TEMPO_EXPIRACAO = 30 * 60 * 1000
 let soldNumbers = new Set()
 let selectedNumbers = []
 let comprando = false
+let reservedNumbers = new Set()
 
-function atualizarBarra(vendidos, total) {
+function atualizarBarra(ocupados, total) {
 
-    const porcentagem = Math.round((vendidos / total) * 100);
+    const porcentagem = Math.round((ocupados / total) * 100);
 
     document.getElementById("progresso").style.width = porcentagem + "%";
 
@@ -171,15 +172,24 @@ function loadNumbers() {
         if (comprando) return
 
         soldNumbers = new Set()
+        reservedNumbers = new Set()
         const agora = Date.now()
 
         for (const docSnap of querySnapshot.docs) {
             const data = docSnap.data()
 
-            if (agora > data.expiresAt) {
+            if (agora > data.expiresAt && data.status === "reservado") {
                 await deleteDoc(doc(db, 'rifa', docSnap.id))
+                continue
             } else {
-                soldNumbers.add(data.number)
+
+                if (data.status === "reservado") {
+                    reservedNumbers.add(Number(data.number))
+                }
+
+                if (data.status === "VENDIDO") {
+                    soldNumbers.add(Number(data.number))
+                }
             }
         }
 
@@ -200,6 +210,10 @@ function createNumbers() {
         div.classList.add('number')
         div.innerText = i
 
+
+        if (reservedNumbers.has(i)) {
+            div.classList.add('reserved')
+        }
         if (soldNumbers.has(i)) {
             div.classList.add('sold')
         }
@@ -216,6 +230,16 @@ function createNumbers() {
                     div.classList.remove("sold-click")
                 }, 300)
                 showToast("Esse número já foi vendido.")
+                return
+            }
+            if (reservedNumbers.has(i)) {
+                div.classList.add("sold-click")
+
+                setTimeout(() => {
+                    div.classList.remove("sold-click")
+                }, 300)
+
+                showToast("Esse número já está reservado.")
                 return
             }
 
@@ -262,13 +286,13 @@ Total: <strong>R$ ${total}</strong>
 
 function updateCounter() {
 
-    const vendidos = soldNumbers.size
-    const disponiveis = 150 - vendidos
+    const ocupados = soldNumbers.size + reservedNumbers.size
+    const disponiveis = 150 - ocupados
 
     counter.innerText =
-        `Disponíveis: ${disponiveis} | Vendidos: ${vendidos}`
+        `Disponíveis: ${disponiveis} | Ocupados: ${ocupados}`
 
-    atualizarBarra(vendidos, 150)
+    atualizarBarra(ocupados, 150)
 }
 
 function showToast(msg, duration = 3000) {
@@ -332,8 +356,12 @@ buyBtn.addEventListener('click', async () => {
                 if (snap.exists()) {
                     const data = snap.data()
 
-                    if (Date.now() < data.expiresAt) {
-                        throw new Error('Número já reservado')
+                    if (data.status === "VENDIDO") {
+                        throw new Error("Número já vendido")
+                    }
+
+                    if (data.status === "reservado" && Date.now() < data.expiresAt) {
+                        throw new Error("Número já reservado")
                     }
 
                     transaction.delete(ref)

@@ -194,8 +194,13 @@ h1 {
 }
 
 .sold {
-    background: #ccc;
+    background: #e53935;
 }
+
+.reserved {
+    background: #facc15;
+}
+
 
 .barra {
     width: 100%;
@@ -292,7 +297,6 @@ h1 {
 .number.sold {
     background: #e53935;
     color: white;
-    border-color: #e53935;
     cursor: not-allowed;
 }
 
@@ -316,9 +320,11 @@ h1 {
     opacity: 0.6;
 }
 
-.number.sold {
-    background: #ccc;
-    color: #665;
+
+
+.number.reserved {
+    background: #facc15;
+    color: #000;
     cursor: not-allowed;
 }
 
@@ -334,18 +340,39 @@ h1 {
 .numbers::-webkit-scrollbar-track {
     background: #eee;
 }
+
+.number:not(.sold):not(.reserved):hover {
+    background: #901515;
+    color: white;
+    transform: scale(1.12) rotate(2deg);
+}
+
 @keyframes shake {
 
-0%{transform:translateX(0)}
-25%{transform:translateX(-4px)}
-50%{transform:translateX(4px)}
-75%{transform:translateX(-4px)}
-100%{transform:translateX(0)}
+    0% {
+        transform: translateX(0)
+    }
+
+    25% {
+        transform: translateX(-4px)
+    }
+
+    50% {
+        transform: translateX(4px)
+    }
+
+    75% {
+        transform: translateX(-4px)
+    }
+
+    100% {
+        transform: translateX(0)
+    }
 
 }
 
 .number.sold-click {
-animation: shake 0.3s;
+    animation: shake 0.3s;
 }
 
 .summary {
