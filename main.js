@@ -52,7 +52,83 @@ function atualizarBarra(vendidos, total) {
     document.getElementById("progresso").style.width = porcentagem + "%";
 
     document.getElementById("porcentagem").innerText =
-        porcentagem + "% vendido";
+        porcentagem + "% Vendidos";
+
+}
+function confete() {
+
+    for (let i = 0; i < 120; i++) {
+
+        const confete = document.createElement("div")
+        confete.classList.add("confete")
+
+        const cores = [
+            "#ff0000",
+            "#ffd700",
+            "#22c55e",
+            "#3b82f6",
+            "#ff69b4"
+        ]
+
+        confete.style.background =
+            cores[Math.floor(Math.random() * cores.length)]
+
+        confete.style.left = Math.random() * 100 + "vw"
+
+        confete.style.animationDuration =
+            (Math.random() * 3 + 3) + "s"
+
+        confete.style.width = (Math.random() * 8 + 4) + "px"
+        confete.style.height = confete.style.width
+
+        document.body.appendChild(confete)
+
+        setTimeout(() => {
+            confete.remove()
+        }, 6000)
+    }
+}
+function animacaoSorteio() {
+
+    const numeros = document.querySelectorAll(".number")
+
+    let velocidade = 50
+    let rodadas = 40
+    let atual = 0
+
+    const intervalo = setInterval(() => {
+
+        numeros.forEach(n => {
+            n.style.background = ""
+            n.style.color = ""
+        })
+
+        numeros[atual].style.background = "#ffd700"
+        numeros[atual].style.color = "#000"
+
+        atual++
+
+        if (atual >= numeros.length) {
+            atual = 0
+        }
+
+        rodadas--
+
+        if (rodadas <= 0) {
+
+            clearInterval(intervalo)
+
+            const vencedor =
+                Math.floor(Math.random() * numeros.length)
+
+            numeros[vencedor].style.background = "#22c55e"
+            numeros[vencedor].style.color = "#fff"
+
+            confete()
+
+        }
+
+    }, velocidade)
 
 }
 function loadNumbers() {
@@ -100,6 +176,11 @@ function createNumbers() {
 
         div.addEventListener('click', () => {
 
+            div.style.transform = "scale(1.2)"
+
+            setTimeout(() => {
+                div.style.transform = ""
+            }, 120)
             if (soldNumbers.has(i)) return
 
             if (selectedNumbers.includes(i)) {
@@ -182,6 +263,7 @@ buyBtn.addEventListener('click', async () => {
 
     const nomeInput = document.getElementById('name')
     const nomeSemNum = nomeInput.value.trim()
+    confete()
 
     if (selectedNumbers.length === 0)
         return showToast('Selecione pelo menos um número.')
@@ -230,8 +312,12 @@ buyBtn.addEventListener('click', async () => {
         localStorage.setItem('nome', name)
         localStorage.setItem('turma', turma)
         localStorage.setItem('createdAt', Date.now())
+
+        confete()
         comprando = true
-        window.location.href = './pages/pagamento.html'
+        setTimeout(() => {
+            window.location.href = './pages/pagamento.html'
+        }, 1200)
     } catch (e) {
         showToast('Um dos números já foi reservado por outra pessoa.')
 
@@ -259,5 +345,6 @@ campoNome.addEventListener('input', function () {
 
     this.value = nome
 })
+
 
 loadNumbers()

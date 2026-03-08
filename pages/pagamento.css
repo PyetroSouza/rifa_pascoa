@@ -49,16 +49,14 @@ button {
     border: 1px solid #ccc;
     font-size: 15px;
     color: #665;
-}
-
-button {
-    background: #25D366;
+        background: #25D366;
     color: white;
     border: none;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
+
 
 button:hover {
     opacity: 0.9;

@@ -184,6 +184,13 @@ h1 {
     overflow: hidden;
 }
 
+#progresso {
+    height: 20px;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
 .porcentagem {
     text-align: center;
     font-size: 13px;
@@ -236,15 +243,15 @@ h1 {
     font-weight: bold;
     transition: all 0.25s ease;
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.8), transform 0.2s;
     animation: aparecer 0.3s forwards;
 }
 
 .number:hover {
     background: #901515;
     color: white;
-    transform: scale(1.08);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    transform: scale(1.12) rotate(2deg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .number.sold {
@@ -258,14 +265,39 @@ h1 {
     background: #4caf50;
     color: white;
     border-color: #4caf50;
+    transform: scale(1.1);
 
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+}
+
+.number.selected::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #22c55e, #4ade80, #22c55e);
+    z-index: -1;
+    filter: blur(6px);
+    opacity: 0.6;
 }
 
 .number.sold {
     background: #ccc;
     color: #665;
     cursor: not-allowed;
+}
+
+.numbers::-webkit-scrollbar {
+    width: 8px;
+}
+
+.numbers::-webkit-scrollbar-thumb {
+    background: #b30000;
+    border-radius: 10px;
+}
+
+.numbers::-webkit-scrollbar-track {
+    background: #eee;
 }
 
 .summary {
@@ -295,16 +327,17 @@ button,
 }
 
 button {
-    background: #25D366;
+    background: linear-gradient(45deg, #25D366, #1ebe5b);
     color: white;
     border: none;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.25s;
 }
 
 button:hover {
-    opacity: 0.9;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
 button:disabled {
@@ -431,6 +464,30 @@ button:disabled {
     animation: fall linear forwards;
     pointer-events: none;
     z-index: 9999;
+}
+
+.confete {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    opacity: 0.9;
+    background: red;
+    top: -10px;
+    z-index: 9999;
+    animation: cairConfete linear forwards;
+}
+
+
+@keyframes cairConfete{
+
+    0%{
+        transform:translateY(-10px) rotate(0deg);
+    }
+
+    100%{
+        transform:translateY(110vh) rotate(720deg);
+    }
+
 }
 
 @keyframes fall {
