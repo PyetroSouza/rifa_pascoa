@@ -4,7 +4,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     /* muda aqui */
     padding: 20px 10px;
     /* espaço nas laterais */
