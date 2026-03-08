@@ -44,6 +44,16 @@ const TEMPO_EXPIRACAO = 30 * 60 * 1000
 let soldNumbers = []
 let selectedNumbers = []
 
+function atualizarBarra(vendidos, total) {
+
+    const porcentagem = Math.round((vendidos / total) * 100);
+
+    document.getElementById("progresso").style.width = porcentagem + "%";
+
+    document.getElementById("porcentagem").innerText =
+        porcentagem + "% vendido";
+
+}
 function loadNumbers() {
 
     onSnapshot(collection(db, 'rifa'), async (querySnapshot) => {
@@ -126,6 +136,8 @@ function updateCounter() {
 
     counter.innerText =
         `Disponíveis: ${disponiveis} | Vendidos: ${vendidos}`
+
+    atualizarBarra(vendidos, 150)
 }
 
 function showToast(msg, duration = 3000) {
@@ -218,6 +230,8 @@ buyBtn.addEventListener('click', async () => {
         buyBtn.disabled = false
     }
 })
+
+
 
 const campoNome = document.getElementById('name')
 
