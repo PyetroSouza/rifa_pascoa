@@ -45,6 +45,8 @@ let soldNumbers = []
 let selectedNumbers = []
 
 async function loadNumbers() {
+
+    soldNumbers = []
     const querySnapshot = await getDocs(collection(db, 'rifa'))
     const agora = Date.now()
 
