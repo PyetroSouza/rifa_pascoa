@@ -1,9 +1,5 @@
 body {
     background: linear-gradient(135deg, red, black);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
 }
 
 main {
@@ -75,12 +71,16 @@ h1 {
 }
 
 .premio-box {
-    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 12px;
-    margin: 20px 0;
+    margin: 10px 0 20px 0;
     text-align: center;
+    background: #fff3cd;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    display: inline-block;
 }
 
 .ovo {
@@ -95,6 +95,7 @@ h1 {
 
 .ovo:hover {
     filter: drop-shadow(0 0 15px rgba(255, 200, 0, 0.7));
+    transform: scale(1.05);
 }
 
 .premio {
@@ -106,10 +107,6 @@ h1 {
     color: #856404;
     max-width: 100%;
     text-align: center;
-}
-
-.ovo:hover {
-    transform: scale(1.05);
 }
 
 @keyframes flutuar {
@@ -124,15 +121,6 @@ h1 {
     100% {
         transform: translateY(0px);
     }
-}
-
-.premio-box {
-    background: #fff3cd;
-    padding: 8px 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-    font-weight: 600;
-    display: inline-block;
 }
 
 .counter {
@@ -326,8 +314,21 @@ button:disabled {
 }
 
 .instas a {
-    color: rgb(247, 103, 103);
+    display: flex;
+    gap: 8px;
     font-weight: bold;
+    text-align: center;
+    margin-left: 2.5em;
+}
+
+.instas a .dev-link {
+    color: rgb(247, 103, 103);
+    transition: 0.3s;
+}
+
+.instas a .dev-link:hover {
+    color: rgb(224, 73, 73);
+    text-decoration: underline;
 }
 
 .lista-devs {
@@ -354,11 +355,15 @@ button:disabled {
 }
 
 #chavePix {
+    color: #0d6efd;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 #chavePix:hover {
-    color: #0d6efd;
+    color: #0a58ca;
+    text-decoration: underline;
 }
 
 #tela-pagamento {
