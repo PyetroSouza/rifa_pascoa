@@ -48,7 +48,7 @@ main {
 }
 
 .container::before {
-    content: "🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫";
+    content: "🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 🍫 🐰 ";
     position: absolute;
     top: -25px;
     left: 0;
@@ -180,8 +180,6 @@ h1 {
     font-weight: 600;
     display: inline-block;
 }
-
-
 
 .counter {
     text-align: center;
@@ -446,6 +444,21 @@ button:disabled {
 
 #btnWhatsapp {
     background: #25D366;
+}
+.egg {
+    position: fixed;
+    top: -50px;
+    font-size: 24px;
+    animation: fall linear forwards;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0.8;
+    }
 }
 
 @media (max-width: 1024px) {
