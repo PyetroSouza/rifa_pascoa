@@ -75,44 +75,50 @@ function loadNumbers() {
         updateCounter()
     })
 }
-
 function createNumbers() {
+
     numbersContainer.innerHTML = ''
 
+    const fragment = document.createDocumentFragment()
 
     for (let i = 1; i <= 150; i++) {
-        setTimeout(() => {
-            const div = document.createElement('div')
 
-            div.classList.add('number')
-            div.innerText = i
+        const div = document.createElement('div')
 
-            if (soldNumbers.includes(i)) {
-                div.classList.add('sold')
-            }
+        div.classList.add('number')
+        div.innerText = i
+
+        if (soldNumbers.includes(i)) {
+            div.classList.add('sold')
+        }
+
+        if (selectedNumbers.includes(i)) {
+            div.classList.add('selected')
+        }
+
+        div.addEventListener('click', () => {
+
+            if (soldNumbers.includes(i)) return
+
             if (selectedNumbers.includes(i)) {
+
+                selectedNumbers = selectedNumbers.filter(n => n !== i)
+                div.classList.remove('selected')
+
+            } else {
+
+                selectedNumbers.push(i)
                 div.classList.add('selected')
+
             }
 
-            div.addEventListener('click', () => {
-                if (soldNumbers.includes(i)) return
+            updateSummary()
+        })
 
-                if (selectedNumbers.includes(i)) {
-                    selectedNumbers = selectedNumbers.filter(n => n !== i)
-
-                    div.classList.remove('selected')
-                } else {
-                    selectedNumbers.push(i)
-
-                    div.classList.add('selected')
-                }
-
-                updateSummary()
-            })
-
-            numbersContainer.appendChild(div)
-        }, i * 10)
+        fragment.appendChild(div)
     }
+
+    numbersContainer.appendChild(fragment)
 }
 
 function updateSummary() {
