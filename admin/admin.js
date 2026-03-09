@@ -11,7 +11,7 @@
 
 'use strict'
 
-const senha = prompt('Digite a senha do painel administrativo:')
+const senha = prompt('Digite a senha do painel administrativo:').trim()
 
 if (senha !== '3raorh26') {
     alert('Acesso negado.')
