@@ -46,7 +46,6 @@ const listaReservados = document.getElementById('listaReservados')
 const listaVendidos = document.getElementById('listaVendidos')
 const stats = document.getElementById('stats')
 const searchInput = document.getElementById('searchInput')
-const emailAdmin = 'caixarecursoshumanos.etec@gmail.com'
 
 let reservas = []
 let termoBusca = ''
@@ -54,19 +53,14 @@ let termoBusca = ''
 // LOGIN ADMIN
 async function loginAdmin() {
 
-    const senha = prompt("Digite a senha do administrador:")
-
-    if (!senha) {
-        alert("Senha obrigatória.")
-        window.location.href = "../index.html"
-        return
-    }
+    const email = prompt('Digite o email do administrador:')
+    const senha = prompt('Digite a senha do administrador:')
 
     try {
-        await signInWithEmailAndPassword(auth, emailAdmin, senha)
+        await signInWithEmailAndPassword(auth, email, senha)
     } catch (error) {
-        alert("Senha incorreta.")
-        window.location.href = "../index.html"
+        alert('Login incorreto.')
+        window.location.href = '../index.html'
     }
 }
 
@@ -126,7 +120,6 @@ function escutarReservas() {
         renderizarReservas(reservas)
     })
 }
-
 
 // RENDERIZAR RESERVAS
 function renderizarReservas(listaReservas) {
