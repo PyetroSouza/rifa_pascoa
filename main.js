@@ -51,6 +51,43 @@ let selectedNumbers = []
 let comprando = false
 let reservedNumbers = new Set()
 
+function calcularExpiracao() {
+    const agora = new Date()
+
+    const inicio = new Date()
+    inicio.setHours(7, 30, 0, 0)
+
+    const fim = new Date()
+    fim.setHours(22, 0, 0, 0)
+
+    // antes de abrir
+    if (agora < inicio) {
+        return inicio.getTime() + TEMPO_EXPIRACAO
+    }
+
+    // depois de fechar
+    if (agora >= fim) {
+        const proximoDia = new Date(inicio)
+        proximoDia.setDate(proximoDia.getDate() + 1)
+
+        return proximoDia.getTime() + TEMPO_EXPIRACAO
+    }
+
+    // horário normal
+    const expiracao = new Date(agora)
+    expiracao.setMinutes(expiracao.getMinutes() + 30)
+
+    // se ultrapassar 22:00
+    if (expiracao > fim) {
+        const proximoDia = new Date(inicio)
+        proximoDia.setDate(proximoDia.getDate() + 1)
+
+        return proximoDia.getTime() + TEMPO_EXPIRACAO
+    }
+
+    return expiracao.getTime()
+}
+
 // BARRA DE PROGRESSO
 function atualizarBarra(ocupados, total) {
     const porcentagem = Math.round((ocupados / total) * 100);
@@ -361,7 +398,7 @@ buyBtn.addEventListener('click', async () => {
                     number,
                     status: 'reservado',
                     createdAt: Date.now(),
-                    expiresAt: Date.now() + TEMPO_EXPIRACAO
+                    expiresAt: calcularExpiracao()
                 })
             })
         }

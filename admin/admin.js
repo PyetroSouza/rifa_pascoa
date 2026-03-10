@@ -74,35 +74,6 @@ onAuthStateChanged(auth, (user) => {
     }
 })
 
-// HORÁRIO DE FUNCIONAMENTO SISTEMA
-function ajustarExpiracao(expiresAt) {
-    const agora = new Date()
-    const expiracao = new Date(expiresAt)
-
-    const inicio = new Date()
-    inicio.setHours(7, 30, 0, 0)
-
-    const fim = new Date()
-    fim.setHours(22, 0, 0, 0)
-
-    if (expiracao > fim) {
-        const diferenca = expiracao - fim
-        const novoHorario = new Date(inicio)
-        novoHorario.setDate(novoHorario.getDate() + 1)
-
-        return novoHorario.getTime() + diferenca
-    }
-
-    if (agora < inicio) {
-        const diferenca = expiracao - agora
-        const novoHorario = new Date(inicio)
-
-        return novoHorario.getTime() + diferenca
-    }
-
-    return expiresAt
-}
-
 // ESCUTAR RESERVAS FIREBASE
 function escutarReservas() {
     onSnapshot(collection(db, 'rifa'), (snapshot) => {
@@ -166,14 +137,15 @@ function renderizarReservas(listaReservas) {
             if (sistemaFechado()) {
                 tempoRestanteHTML = `
                 <div class="tempo" style="color: orange; font-weight: bold;">
-                ⏸ Retoma às 07:30
+                Retoma às 07:30 ⏸
+                <br>
+                30 min após a retomada
                 </div>
                 <br>
                 `
             } else {
                 const agora = Date.now()
-                const tempoCorrigido = ajustarExpiracao(data.expiresAt)
-                const tempoRestante = tempoCorrigido - agora
+                const tempoRestante = data.expiresAt - agora
 
                 if (tempoRestante > 0) {
                     const minutos = Math.floor(tempoRestante / 60000)
