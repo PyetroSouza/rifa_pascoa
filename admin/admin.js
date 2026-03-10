@@ -6,19 +6,13 @@
     - Kauan Alves Pereira
     - Kayque Brenno Ferreira Almeida
     - Pyetro Ferreira de Souza
- * Versão: 3.6
+ * Versão: 4.0 (com Firebase Authentication)
 ****************************************************************************/
 
 'use strict'
 
-const senha = prompt('Digite a senha do painel administrativo:').trim()
-
-if (senha !== '3raorh26') {
-    alert('Acesso negado.')
-    window.location.href = '../index.html'
-}
-
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js'
+
 import {
     getFirestore,
     collection,
@@ -27,6 +21,13 @@ import {
     doc,
     deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js'
+
+//Importa o firebase com o email e senha de admin
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA',
@@ -39,14 +40,45 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
+const auth = getAuth(app)
 
 const listaReservados = document.getElementById('listaReservados')
 const listaVendidos = document.getElementById('listaVendidos')
 const stats = document.getElementById('stats')
 const searchInput = document.getElementById('searchInput')
+const emailAdmin = 'caixarecursoshumanos.etec@gmail.com'
 
 let reservas = []
 let termoBusca = ''
+
+// LOGIN ADMIN
+async function loginAdmin() {
+
+    const senha = prompt("Digite a senha do administrador:")
+
+    if (!senha) {
+        alert("Senha obrigatória.")
+        window.location.href = "../index.html"
+        return
+    }
+
+    try {
+        await signInWithEmailAndPassword(auth, emailAdmin, senha)
+    } catch (error) {
+        alert("Senha incorreta.")
+        window.location.href = "../index.html"
+    }
+}
+
+// VERIFICAR AUTENTICAÇÃO
+onAuthStateChanged(auth, (user) => {
+
+    if (!user) {
+        loginAdmin()
+    } else {
+        escutarReservas()
+    }
+})
 
 // HORÁRIO DE FUNCIONAMENTO SISTEMA
 function ajustarExpiracao(expiresAt) {
@@ -61,7 +93,6 @@ function ajustarExpiracao(expiresAt) {
 
     if (expiracao > fim) {
         const diferenca = expiracao - fim
-
         const novoHorario = new Date(inicio)
         novoHorario.setDate(novoHorario.getDate() + 1)
 
@@ -70,7 +101,6 @@ function ajustarExpiracao(expiresAt) {
 
     if (agora < inicio) {
         const diferenca = expiracao - agora
-
         const novoHorario = new Date(inicio)
 
         return novoHorario.getTime() + diferenca
@@ -97,7 +127,8 @@ function escutarReservas() {
     })
 }
 
-// RENDERIZAR RESERVAS //
+
+// RENDERIZAR RESERVAS
 function renderizarReservas(listaReservas) {
     listaReservados.innerHTML = ''
     listaVendidos.innerHTML = ''
@@ -125,9 +156,7 @@ function renderizarReservas(listaReservas) {
 
         if (status === 'reservado' && data.expiresAt) {
             const agora = Date.now()
-
             const tempoCorrigido = ajustarExpiracao(data.expiresAt)
-
             const tempoRestante = tempoCorrigido - agora
 
             if (tempoRestante > 0) {
@@ -208,7 +237,7 @@ function renderizarReservas(listaReservas) {
 window.confirmar = async function (id) {
     try {
         await updateDoc(doc(db, 'rifa', id), {
-            status: 'VENDIDO'
+            status: 'vendido'
         })
         alert('Pagamento confirmado!')
     } catch (error) {
@@ -243,9 +272,6 @@ searchInput.addEventListener('input', () => {
 
     renderizarReservas(filtrados)
 })
-
-// INICIAR SISTEMA
-escutarReservas()
 
 // TIMER GLOBAL
 setInterval(() => {
