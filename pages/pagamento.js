@@ -49,7 +49,6 @@ function atualizarTempo() {
     const restante = expiresAt - agora
 
     if (restante <= 0) {
-
         clearInterval(intervalo)
 
         timer.innerText = "Reserva expirada"
@@ -69,8 +68,7 @@ function atualizarTempo() {
     const minutos = Math.floor(restante / 60000)
     const segundos = Math.floor((restante % 60000) / 1000)
 
-    timer.innerText =
-        `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
+    timer.innerText = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
 }
 
 intervalo = setInterval(atualizarTempo, 1000)
@@ -93,13 +91,11 @@ function showToast(msg, type = 'success', duration = 3000) {
 }
 
 function copiarPix() {
-
     const chave = document.getElementById('pixKey').innerText
     const botao = document.getElementById('btnPix')
 
     navigator.clipboard.writeText(chave)
         .then(() => {
-
             showToast('Chave Pix copiada!', 'success')
 
             botao.innerText = 'Copiado ✓'
@@ -107,7 +103,6 @@ function copiarPix() {
             setTimeout(() => {
                 botao.innerText = 'Copiar'
             }, 2000)
-
         })
         .catch(() => {
             showToast('Erro ao copiar chave Pix', 'error')

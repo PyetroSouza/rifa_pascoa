@@ -6,13 +6,13 @@
     - Kauan Alves Pereira
     - Kayque Brenno Ferreira Almeida
     - Pyetro Ferreira de Souza
- * Versão: 4.0 (com Firebase Authentication)
+ * Versão: 4.0
 ****************************************************************************/
 
 'use strict'
 
+// Importações Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js'
-
 import {
     getFirestore,
     collection,
@@ -21,14 +21,13 @@ import {
     doc,
     deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js'
-
-//Importa o firebase com o email e senha de admin
 import {
     getAuth,
     signInWithEmailAndPassword,
     onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js'
 
+// Configurações do Firebase
 const firebaseConfig = {
     apiKey: 'AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA',
     authDomain: 'site-para-rifa-de-pascoa-25745.firebaseapp.com',
@@ -38,21 +37,23 @@ const firebaseConfig = {
     appId: '1:1004843167683:web:93211e8925926723c3d776'
 }
 
+// Inicialização Firebase
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 const auth = getAuth(app)
 
+// Elementos DOM
 const listaReservados = document.getElementById('listaReservados')
 const listaVendidos = document.getElementById('listaVendidos')
 const stats = document.getElementById('stats')
 const searchInput = document.getElementById('searchInput')
 
+// Variáveis globais
 let reservas = []
 let termoBusca = ''
 
 // LOGIN ADMIN
 async function loginAdmin() {
-
     const email = prompt('Digite o email do administrador:')
     const senha = prompt('Digite a senha do administrador:')
 
@@ -66,7 +67,6 @@ async function loginAdmin() {
 
 // VERIFICAR AUTENTICAÇÃO
 onAuthStateChanged(auth, (user) => {
-
     if (!user) {
         loginAdmin()
     } else {
@@ -121,6 +121,21 @@ function escutarReservas() {
     })
 }
 
+// SISTEMA FECHADO
+function sistemaFechado() {
+    const agora = new Date()
+
+    const hora = agora.getHours()
+    const minuto = agora.getMinutes()
+
+    const minutos = hora * 60 + minuto
+
+    const inicio = 7 * 60 + 30
+    const fim = 22 * 60
+
+    return minutos < inicio || minutos >= fim
+}
+
 // RENDERIZAR RESERVAS
 function renderizarReservas(listaReservas) {
     listaReservados.innerHTML = ''
@@ -148,35 +163,44 @@ function renderizarReservas(listaReservas) {
         let tempoRestanteHTML = ''
 
         if (status === 'reservado' && data.expiresAt) {
-            const agora = Date.now()
-            const tempoCorrigido = ajustarExpiracao(data.expiresAt)
-            const tempoRestante = tempoCorrigido - agora
-
-            if (tempoRestante > 0) {
-                const minutos = Math.floor(tempoRestante / 60000)
-                const segundos = Math.floor((tempoRestante % 60000) / 1000)
-
-                let cor = 'green'
-
-                if (tempoRestante < 300000) {
-                    cor = 'red'
-                } else if (tempoRestante < 600000) {
-                    cor = 'orange'
-                }
-
+            if (sistemaFechado()) {
                 tempoRestanteHTML = `
+                <div class="tempo" style="color: orange; font-weight: bold;">
+                ⏸ Retoma às 07:30
+                </div>
+                <br>
+                `
+            } else {
+                const agora = Date.now()
+                const tempoCorrigido = ajustarExpiracao(data.expiresAt)
+                const tempoRestante = tempoCorrigido - agora
+
+                if (tempoRestante > 0) {
+                    const minutos = Math.floor(tempoRestante / 60000)
+                    const segundos = Math.floor((tempoRestante % 60000) / 1000)
+
+                    let cor = 'green'
+
+                    if (tempoRestante < 300000) {
+                        cor = 'red'
+                    } else if (tempoRestante < 600000) {
+                        cor = 'orange'
+                    }
+
+                    tempoRestanteHTML = `
                 <div class="tempo" style="color:${cor}; font-weight:bold;">
                 ⏱️ Expira em: ${minutos}:${segundos.toString().padStart(2, '0')}
                 </div>
                 <br>
                 `
-            } else {
-                tempoRestanteHTML = `
+                } else {
+                    tempoRestanteHTML = `
                 <div class="tempo" style="color:red; font-weight:bold;">
                 ⏱️ EXPIRADO
                 </div>
                 <br>
                 `
+                }
             }
         }
 

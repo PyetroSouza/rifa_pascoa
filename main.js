@@ -11,6 +11,7 @@
 
 'use strict'
 
+// Importações Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js'
 import {
     getFirestore,
@@ -21,6 +22,7 @@ import {
     deleteDoc
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js'
 
+// Configurações do Firebase
 const firebaseConfig = {
     apiKey: 'AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA',
     authDomain: 'site-para-rifa-de-pascoa-25745.firebaseapp.com',
@@ -30,21 +32,26 @@ const firebaseConfig = {
     appId: '1:1004843167683:web:93211e8925926723c3d776'
 }
 
+// Inicialização Firebase
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
+// Elementos DOM
 const numbersContainer = document.getElementById('numbers')
 const counter = document.getElementById('counter')
 const summary = document.getElementById('summary')
 const buyBtn = document.getElementById('buyBtn')
 
+// Variáveis globais
 const TEMPO_EXPIRACAO = 30 * 60 * 1000
 
+// Variáveis para controle de números
 let soldNumbers = new Set()
 let selectedNumbers = []
 let comprando = false
 let reservedNumbers = new Set()
 
+// BARRA DE PROGRESSO
 function atualizarBarra(ocupados, total) {
     const porcentagem = Math.round((ocupados / total) * 100);
 
@@ -55,11 +62,11 @@ function atualizarBarra(ocupados, total) {
 
 }
 
+// CONTADOR REGRESSIVO
 function iniciarContador() {
     const dataSorteio = new Date("April 3, 2026 0:00:00").getTime()
 
     const intervalo = setInterval(() => {
-
         const agora = new Date().getTime()
 
         const distancia = dataSorteio - agora
@@ -87,6 +94,7 @@ function iniciarContador() {
 
 iniciarContador()
 
+// CONFETES
 function confete() {
     for (let i = 0; i < 120; i++) {
         const confete = document.createElement("div")
@@ -119,6 +127,7 @@ function confete() {
     }
 }
 
+// ANIMAÇÃO SORTEIO
 function animacaoSorteio() {
     const numeros = document.querySelectorAll(".number")
 
@@ -146,8 +155,7 @@ function animacaoSorteio() {
         if (rodadas <= 0) {
             clearInterval(intervalo)
 
-            const vencedor =
-                Math.floor(Math.random() * numeros.length)
+            const vencedor = Math.floor(Math.random() * numeros.length)
 
             numeros[vencedor].style.background = "#22c55e"
             numeros[vencedor].style.color = "#fff"
@@ -157,6 +165,7 @@ function animacaoSorteio() {
     }, velocidade)
 }
 
+// FUNÇÕES PRINCIPAIS
 function loadNumbers() {
     onSnapshot(collection(db, 'rifa'), async (querySnapshot) => {
         if (comprando) return
@@ -172,7 +181,6 @@ function loadNumbers() {
                 await deleteDoc(doc(db, 'rifa', docSnap.id))
                 continue
             } else {
-
                 if (data.status === "reservado") {
                     reservedNumbers.add(Number(data.number))
                 }
@@ -188,6 +196,7 @@ function loadNumbers() {
     })
 }
 
+// AJUSTAR EXPIRAÇÃO PARA FUSO HORÁRIO
 function createNumbers() {
     numbersContainer.innerHTML = ''
 
@@ -198,7 +207,6 @@ function createNumbers() {
 
         div.classList.add('number')
         div.innerText = i
-
 
         if (reservedNumbers.has(i)) {
             div.classList.add('reserved')
@@ -224,11 +232,9 @@ function createNumbers() {
 
             if (reservedNumbers.has(i)) {
                 div.classList.add("sold-click")
-
                 setTimeout(() => {
                     div.classList.remove("sold-click")
                 }, 300)
-
                 showToast("Esse número já está reservado.")
                 return
             }
@@ -274,8 +280,7 @@ function updateCounter() {
     const ocupados = soldNumbers.size + reservedNumbers.size
     const disponiveis = 150 - ocupados
 
-    counter.innerText =
-        `Disponíveis: ${disponiveis} | Ocupados: ${ocupados}`
+    counter.innerText = `Disponíveis: ${disponiveis} | Ocupados: ${ocupados}`
 
     atualizarBarra(ocupados, 150)
 }
@@ -296,6 +301,7 @@ function showToast(msg, duration = 3000) {
     }, duration)
 }
 
+// COPIAR CHAVE PIX
 function copiarPix() {
     const chave = document.getElementById('pixKey').innerText
 
@@ -306,13 +312,13 @@ function copiarPix() {
 
 window.copiarPix = copiarPix
 
+// FUNCIONALIDADE DO BOTÃO DE RESERVAR NÚMEROS
 buyBtn.addEventListener('click', async () => {
     const name = document.getElementById('name').value.trim()
     const turma = document.getElementById('turma').value.trim()
 
     const nomeInput = document.getElementById('name')
     const nomeSemNum = nomeInput.value.trim()
-
 
     if (selectedNumbers.length === 0) return showToast('Selecione pelo menos um número.')
 
@@ -372,13 +378,13 @@ buyBtn.addEventListener('click', async () => {
         }, 1200)
     } catch (e) {
         showToast('Um dos números já foi reservado por outra pessoa.')
-
         buyBtn.disabled = false
     }
 })
 
 const campoNome = document.getElementById('name')
 
+// MÁSCARA PARA O NOME
 campoNome.addEventListener('input', function () {
     let nome = this.value
 
@@ -395,6 +401,5 @@ campoNome.addEventListener('input', function () {
 
     this.value = nome
 })
-
 
 loadNumbers()
