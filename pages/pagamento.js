@@ -11,47 +11,47 @@
 
 'use strict'
 
-const NUMEROS = JSON.parse(localStorage.getItem('numeros')) || []
-const NOME = localStorage.getItem('nome') || ''
-const TURMA = localStorage.getItem('turma') || ''
-const CREATED_AT = Number(localStorage.getItem('createdAt') || 0)
+const numeros = JSON.parse(localStorage.getItem('numeros')) || []
+const nome = localStorage.getItem('nome') || ''
+const turma = localStorage.getItem('turma') || ''
+const createdAt = Number(localStorage.getItem('createdAt') || 0)
 
-if (!CREATED_AT || NUMEROS.length === 0) {
+if (!createdAt || numeros.length === 0) {
     window.location.href = "../index.html"
 }
 
-const TOTAL = (NUMEROS.length * 3.5).toFixed(2)
+const total = (numeros.length * 3.5).toFixed(2)
 
-document.getElementById('numConfirmado').innerText = NUMEROS.join(', ')
-document.getElementById('nomeConfirmado').innerText = NOME
-document.getElementById('turmaConfirmada').innerText = TURMA
-document.getElementById('valorFinal').innerText = TOTAL
+document.getElementById('numConfirmado').innerText = numeros.join(', ')
+document.getElementById('nomeConfirmado').innerText = nome
+document.getElementById('turmaConfirmada').innerText = turma
+document.getElementById('valorFinal').innerText = total
 
-const mensagem = `Olá, Manuela! Comprei os números ${NUMEROS.join(', ')}.
-Nome: ${NOME}
-Turma: ${TURMA}
-Total: R$ ${TOTAL}`
+const mensagem = `Olá, Manuela! Comprei os números ${numeros.join(', ')}.
+Nome: ${nome}
+Turma: ${turma}
+Total: R$ ${total}`
 
 document.getElementById('btnWhatsapp').onclick = function () {
-    const URL = `https://wa.me/5511946168749?text=${encodeURIComponent(mensagem)}`
-    window.location.href = URL
+    const url = `https://wa.me/5511946168749?text=${encodeURIComponent(mensagem)}`
+    window.location.href = url
 }
 
-const TIMER = document.getElementById("timer")
+const timer = document.getElementById("timer")
 
 const TEMPO_EXPIRACAO = 30 * 60 * 1000
-const EXPIRES_AT = CREATED_AT + TEMPO_EXPIRACAO
+const expiresAt = createdAt + TEMPO_EXPIRACAO
 
 let intervalo
 
 function atualizarTempo() {
-    const AGORA = Date.now()
-    const RESTANTE = EXPIRES_AT - AGORA
+    const agora = Date.now()
+    const restante = expiresAt - agora
 
-    if (RESTANTE <= 0) {
+    if (restante <= 0) {
         clearInterval(intervalo)
 
-        TIMER.innerText = "Reserva expirada"
+        timer.innerText = "Reserva expirada"
 
         localStorage.removeItem('numeros')
         localStorage.removeItem('nome')
@@ -65,10 +65,10 @@ function atualizarTempo() {
         return
     }
 
-    const MINUTOS = Math.floor(RESTANTE / 60000)
-    const SEGUNDOS = Math.floor((RESTANTE % 60000) / 1000)
+    const minutos = Math.floor(restante / 60000)
+    const segundos = Math.floor((restante % 60000) / 1000)
 
-    TIMER.innerText = `${String(MINUTOS).padStart(2, '0')}:${String(SEGUNDOS).padStart(2, '0')}`
+    timer.innerText = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
 }
 
 intervalo = setInterval(atualizarTempo, 1000)
@@ -91,17 +91,17 @@ function showToast(msg, type = 'success', duration = 3000) {
 }
 
 function copiarPix() {
-    const CHAVE_PIX = document.getElementById('pixKey').innerText
-    const BOTAO = document.getElementById('btnPix')
+    const chave = document.getElementById('pixKey').innerText
+    const botao = document.getElementById('btnPix')
 
-    navigator.clipboard.writeText(CHAVE_PIX)
+    navigator.clipboard.writeText(chave)
         .then(() => {
             showToast('Chave Pix copiada!', 'success')
 
-            BOTAO.innerText = 'Copiado ✓'
+            botao.innerText = 'Copiado ✓'
 
             setTimeout(() => {
-                BOTAO.innerText = 'Copiar'
+                botao.innerText = 'Copiar'
             }, 2000)
         })
         .catch(() => {

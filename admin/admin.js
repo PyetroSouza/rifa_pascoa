@@ -28,7 +28,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js'
 
 // Configurações do Firebase
-const FIREBASE_CONFIG = {
+const firebaseConfig = {
     apiKey: 'AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA',
     authDomain: 'site-para-rifa-de-pascoa-25745.firebaseapp.com',
     projectId: 'site-para-rifa-de-pascoa-25745',
@@ -38,15 +38,15 @@ const FIREBASE_CONFIG = {
 }
 
 // Inicialização Firebase
-const APP = initializeApp(FIREBASE_CONFIG)
-const DATABASE = getFirestore(APP)
-const AUTH = getAuth(APP)
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
+const auth = getAuth(app)
 
 // Elementos DOM
-const LISTA_RESERVADOS = document.getElementById('listaReservados')
-const LISTA_VENDIDOS = document.getElementById('listaVendidos')
-const STATS = document.getElementById('stats')
-const SEARCH_INPUT = document.getElementById('searchInput')
+const listaReservados = document.getElementById('listaReservados')
+const listaVendidos = document.getElementById('listaVendidos')
+const stats = document.getElementById('stats')
+const searchInput = document.getElementById('searchInput')
 
 // Variáveis globais
 let reservas = []
@@ -54,11 +54,11 @@ let termoBusca = ''
 
 // LOGIN ADMIN
 async function loginAdmin() {
-    const EMAIL = prompt('Digite o email do administrador:')
-    const SENHA = prompt('Digite a senha do administrador:')
+    const email = prompt('Digite o email do administrador:')
+    const senha = prompt('Digite a senha do administrador:')
 
     try {
-        await signInWithEmailAndPassword(AUTH, EMAIL, SENHA)
+        await signInWithEmailAndPassword(auth, email, senha)
     } catch (error) {
         alert('Login incorreto.')
         window.location.href = '../index.html'
@@ -66,7 +66,7 @@ async function loginAdmin() {
 }
 
 // VERIFICAR AUTENTICAÇÃO
-onAuthStateChanged(AUTH, (user) => {
+onAuthStateChanged(auth, (user) => {
     if (!user)
         loginAdmin()
     else
@@ -75,7 +75,7 @@ onAuthStateChanged(AUTH, (user) => {
 
 // ESCUTAR RESERVAS FIREBASE
 function escutarReservas() {
-    onSnapshot(collection(DATABASE, 'rifa'), (snapshot) => {
+    onSnapshot(collection(db, 'rifa'), (snapshot) => {
         reservas = []
 
         snapshot.forEach((docSnap) => {
@@ -93,46 +93,46 @@ function escutarReservas() {
 
 // SISTEMA FECHADO
 function sistemaFechado() {
-    const AGORA = new Date()
+    const agora = new Date()
 
-    const HORA = AGORA.getHours()
-    const MINUTO = AGORA.getMinutes()
+    const hora = agora.getHours()
+    const minuto = agora.getMinutes()
 
-    const MINUTOS = HORA * 60 + MINUTO
+    const minutos = hora * 60 + minuto
 
-    const INICIO = 7 * 60 + 30
-    const FIM = 22 * 60
+    const inicio = 7 * 60 + 30
+    const fim = 22 * 60
 
-    return MINUTOS < INICIO || MINUTOS >= FIM
+    return minutos < inicio || minutos >= fim
 }
 
 // RENDERIZAR RESERVAS
 function renderizarReservas(listaReservas) {
-    LISTA_RESERVADOS.innerHTML = ''
-    LISTA_VENDIDOS.innerHTML = ''
+    listaReservados.innerHTML = ''
+    listaVendidos.innerHTML = ''
 
     let vendidos = 0
     let reservados = 0
 
     listaReservas.forEach((data) => {
-        const STATUS = (data.status || '').toLowerCase()
+        const status = (data.status || '').toLowerCase()
 
-        if (STATUS === 'vendido') vendidos++
-        if (STATUS === 'reservado') reservados++
+        if (status === 'vendido') vendidos++
+        if (status === 'reservado') reservados++
 
         let dataFormatada = '-'
         let horaFormatada = '-'
 
         if (data.createdAt) {
-            const DATA_FIREBASE = new Date(data.createdAt)
+            const dataFirebase = new Date(data.createdAt)
 
-            dataFormatada = DATA_FIREBASE.toLocaleDateString('pt-BR')
-            horaFormatada = DATA_FIREBASE.toLocaleTimeString('pt-BR')
+            dataFormatada = dataFirebase.toLocaleDateString('pt-BR')
+            horaFormatada = dataFirebase.toLocaleTimeString('pt-BR')
         }
 
         let tempoRestanteHTML = ''
 
-        if (STATUS === 'reservado' && data.expiresAt) {
+        if (status === 'reservado' && data.expiresAt) {
             if (sistemaFechado()) {
                 tempoRestanteHTML = `
                 <div class="tempo" style="color: orange; font-weight: bold;">
@@ -143,24 +143,24 @@ function renderizarReservas(listaReservas) {
                 <br>
                 `
             } else {
-                const AGORA = Date.now()
-                const TEMPO_RESTANTE = data.expiresAt - AGORA
+                const agora = Date.now()
+                const tempoRestante = data.expiresAt - agora
 
-                if (TEMPO_RESTANTE > 0) {
-                    const MINUTOS = Math.floor(TEMPO_RESTANTE / 60000)
-                    const SEGUNDOS = Math.floor((TEMPO_RESTANTE % 60000) / 1000)
+                if (tempoRestante > 0) {
+                    const minutos = Math.floor(tempoRestante / 60000)
+                    const segundos = Math.floor((tempoRestante % 60000) / 1000)
 
                     let cor = 'green'
 
-                    if (TEMPO_RESTANTE < 300000)
+                    if (tempoRestante < 300000) {
                         cor = 'red'
-                    else if (TEMPO_RESTANTE < 600000)
+                    } else if (tempoRestante < 600000) {
                         cor = 'orange'
-                    
+                    }
 
                     tempoRestanteHTML = `
                     <div class="tempo" style="color:${cor}; font-weight:bold;">
-                    ⏱️ Expira em: ${MINUTOS}:${SEGUNDOS.toString().padStart(2, '0')}
+                    ⏱️ Expira em: ${minutos}:${segundos.toString().padStart(2, '0')}
                     </div>
                     <br>
                     `
@@ -175,25 +175,25 @@ function renderizarReservas(listaReservas) {
             }
         }
 
-        const DIV = document.createElement('div')
+        const div = document.createElement('div')
 
-        DIV.style.border = '1px solid #ccc'
-        DIV.style.padding = '10px'
-        DIV.style.marginBottom = '20px'
-        DIV.style.borderRadius = '8px'
+        div.style.border = '1px solid #ccc'
+        div.style.padding = '10px'
+        div.style.marginBottom = '20px'
+        div.style.borderRadius = '8px'
 
         let botoes = `
         <button onclick="cancelar('${data.id}')">Cancelar</button>
         `
 
-        if (STATUS === 'reservado') {
+        if (status === 'reservado') {
             botoes = `
             <button onclick="confirmar('${data.id}')">Confirmar pagamento</button>
             <button onclick="cancelar('${data.id}')">Cancelar</button>
             `
         }
 
-        DIV.innerHTML = `
+        div.innerHTML = `
         ${tempoRestanteHTML}
         <strong>NÚMERO:</strong> ${data.number}<br><br>
         <strong>NOME:</strong> ${data.name}<br><br>
@@ -205,25 +205,25 @@ function renderizarReservas(listaReservas) {
         ${botoes}
         `
 
-        if (STATUS === 'vendido')
-            LISTA_VENDIDOS.appendChild(DIV)
-        else if (STATUS === 'reservado')
-            LISTA_RESERVADOS.appendChild(DIV)
+        if (status === 'vendido')
+            listaVendidos.appendChild(div)
+        else if (status === 'reservado')
+            listaReservados.appendChild(div)
     })
 
-    const DISPONIVEIS = 150 - vendidos - reservados
+    const disponiveis = 150 - vendidos - reservados
 
-    STATS.innerHTML = `
+    stats.innerHTML = `
     <p>Vendidos: <strong>${vendidos}</strong></p>
     <p>Reservados: <strong>${reservados}</strong></p>
-    <p>Disponíveis: <strong>${DISPONIVEIS}</strong></p>
+    <p>Disponíveis: <strong>${disponiveis}</strong></p>
     `
 }
 
 // CONFIRMAR PAGAMENTO
 window.confirmar = async function (id) {
     try {
-        await updateDoc(doc(DATABASE, 'rifa', id), {
+        await updateDoc(doc(db, 'rifa', id), {
             status: 'vendido'
         })
         alert('Pagamento confirmado!')
@@ -235,12 +235,12 @@ window.confirmar = async function (id) {
 
 // CANCELAR RESERVA
 window.cancelar = async function (id) {
-    const CONFIRMAR = confirm('Tem certeza que deseja cancelar esta reserva?')
+    const confirmar = confirm('Tem certeza que deseja cancelar esta reserva?')
 
-    if (!CONFIRMAR) return
+    if (!confirmar) return
 
     try {
-        await deleteDoc(doc(DATABASE, 'rifa', id))
+        await deleteDoc(doc(db, 'rifa', id))
         alert('Reserva cancelada!')
     } catch (error) {
         console.error(error)
@@ -249,23 +249,23 @@ window.cancelar = async function (id) {
 }
 
 // BUSCA
-SEARCH_INPUT.addEventListener('input', () => {
-    termoBusca = SEARCH_INPUT.value.toUpperCase()
+searchInput.addEventListener('input', () => {
+    termoBusca = searchInput.value.toUpperCase()
 
-    const FILTRADOS = reservas.filter((r) =>
+    const filtrados = reservas.filter((r) =>
         (r.name || '').toUpperCase().includes(termoBusca) ||
         String(r.number || '').includes(termoBusca)
     )
 
-    renderizarReservas(FILTRADOS)
+    renderizarReservas(filtrados)
 })
 
 // TIMER GLOBAL
 setInterval(() => {
-    const FILTRADOS = reservas.filter((r) =>
+    const filtrados = reservas.filter((r) =>
         (r.name || '').toUpperCase().includes(termoBusca) ||
         String(r.number || '').includes(termoBusca)
     )
 
-    renderizarReservas(FILTRADOS)
+    renderizarReservas(filtrados)
 }, 1000)
