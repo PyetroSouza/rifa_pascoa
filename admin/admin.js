@@ -48,6 +48,8 @@ const listaVendidos = document.getElementById('listaVendidos')
 const stats = document.getElementById('stats')
 const searchInput = document.getElementById('searchInput')
 
+const qtdeNumeros = 150
+
 // Variáveis globais
 let reservas = []
 let termoBusca = ''
@@ -211,7 +213,7 @@ function renderizarReservas(listaReservas) {
             listaReservados.appendChild(div)
     })
 
-    const disponiveis = 150 - vendidos - reservados
+    const disponiveis = qtdeNumeros - vendidos - reservados
 
     stats.innerHTML = `
     <p>Vendidos: <strong>${vendidos}</strong></p>

@@ -41,6 +41,8 @@ const counter = document.getElementById('counter')
 const summary = document.getElementById('summary')
 const buyBtn = document.getElementById('buyBtn')
 
+const qtdeNumeros = 150
+
 // CAMPO NOME
 const campoNome = document.getElementById('name')
 
@@ -244,7 +246,7 @@ function createNumbers() {
 
     const fragment = document.createDocumentFragment()
 
-    for (let i = 1; i <= 150; i++) {
+    for (let i = 1; i <= qtdeNumeros; i++) {
         const div = document.createElement('div')
 
         div.classList.add('number')
@@ -314,12 +316,12 @@ function updateSummary() {
 function updateCounter() {
     const vendidos = soldNumbers.size
     const reservados = reservedNumbers.size
-    const disponiveis = 150 - vendidos - reservados
+    const disponiveis = qtdeNumeros - vendidos - reservados
 
     counter.innerText = `Disponíveis: ${disponiveis} | Reservados: ${reservados} | Vendidos: ${vendidos}`
 
     const ocupados = vendidos + reservados
-    atualizarBarra(ocupados, 150)
+    atualizarBarra(ocupados, qtdeNumeros)
 }
 
 // TOAST
