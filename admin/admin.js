@@ -48,7 +48,7 @@ const listaVendidos = document.getElementById('listaVendidos')
 const stats = document.getElementById('stats')
 const searchInput = document.getElementById('searchInput')
 
-const qtdeNumeros = 150
+const qtdeNumeros = 160
 
 // Variáveis globais
 let reservas = []

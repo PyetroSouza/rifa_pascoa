@@ -41,7 +41,7 @@ const counter = document.getElementById('counter')
 const summary = document.getElementById('summary')
 const buyBtn = document.getElementById('buyBtn')
 
-const qtdeNumeros = 150
+const qtdeNumeros = 160
 
 // CAMPO NOME
 const campoNome = document.getElementById('name')
