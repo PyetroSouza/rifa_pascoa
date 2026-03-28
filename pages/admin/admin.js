@@ -11,7 +11,7 @@
 
 'use strict'
 
-// Importações Firebase
+// Firebase
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js'
 import {
     getFirestore,
@@ -27,7 +27,7 @@ import {
     onAuthStateChanged
 } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js'
 
-// Configurações do Firebase
+// Config
 const firebaseConfig = {
     apiKey: 'AIzaSyByikN6_CXfiJnb1_0ppP60oBQxN8zVxYA',
     authDomain: 'site-para-rifa-de-pascoa-25745.firebaseapp.com',
@@ -37,12 +37,12 @@ const firebaseConfig = {
     appId: '1:1004843167683:web:93211e8925926723c3d776'
 }
 
-// Inicialização Firebase
+// Init
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 const auth = getAuth(app)
 
-// Elementos DOM
+// DOM
 const listaReservados = document.getElementById('listaReservados')
 const listaVendidos = document.getElementById('listaVendidos')
 const stats = document.getElementById('stats')
@@ -50,162 +50,155 @@ const searchInput = document.getElementById('searchInput')
 
 const qtdeNumeros = 160
 
-// Variáveis globais
 let reservas = []
 let termoBusca = ''
 
-// LOGIN ADMIN
+// LOGIN
 async function loginAdmin() {
-    const email = prompt('Digite o email do administrador:')
-    const senha = prompt('Digite a senha do administrador:')
+    const email = prompt('Email:')
+    const senha = prompt('Senha:')
 
     try {
         await signInWithEmailAndPassword(auth, email, senha)
-    } catch (error) {
+    } catch {
         alert('Login incorreto.')
         window.location.href = '../../index.html'
     }
 }
 
-// VERIFICAR AUTENTICAÇÃO
 onAuthStateChanged(auth, (user) => {
-    if (!user)
-        loginAdmin()
-    else
-        escutarReservas()
+    if (!user) loginAdmin()
+    else escutarReservas()
 })
 
-// ESCUTAR RESERVAS FIREBASE
+// FIREBASE
 function escutarReservas() {
     onSnapshot(collection(db, 'rifa'), (snapshot) => {
-        reservas = []
-
-        snapshot.forEach((docSnap) => {
-            reservas.push({
-                id: docSnap.id,
-                ...docSnap.data()
-            })
-        })
+        reservas = snapshot.docs.map(docSnap => ({
+            id: docSnap.id,
+            ...docSnap.data()
+        }))
 
         reservas.sort((a, b) => a.number - b.number)
 
-        renderizarReservas(reservas)
+        render()
     })
 }
 
-// SISTEMA FECHADO
+// SISTEMA
 function sistemaFechado() {
     const agora = new Date()
+    const minutos = agora.getHours() * 60 + agora.getMinutes()
 
-    const hora = agora.getHours()
-    const minuto = agora.getMinutes()
-
-    const minutos = hora * 60 + minuto
-
-    const inicio = 7 * 60 + 30
-    const fim = 22 * 60
-
-    return minutos < inicio || minutos >= fim
+    return minutos < (7 * 60 + 30) || minutos >= (22 * 60)
 }
 
-// RENDERIZAR RESERVAS
-function renderizarReservas(listaReservas) {
-    listaReservados.innerHTML = ''
-    listaVendidos.innerHTML = ''
+// RENDER PRINCIPAL
+function render() {
+    const filtrados = reservas.filter(r =>
+        (r.name || '').toUpperCase().includes(termoBusca) ||
+        String(r.number || '').includes(termoBusca)
+    )
+
+    renderizarReservas(filtrados)
+}
+
+// RENDER LISTA
+function renderizarReservas(lista) {
+    listaReservados.replaceChildren()
+    listaVendidos.replaceChildren()
 
     let vendidos = 0
     let reservados = 0
 
-    listaReservas.forEach((data) => {
+    lista.forEach(data => {
         const status = (data.status || '').toLowerCase()
 
         if (status === 'vendido') vendidos++
         if (status === 'reservado') reservados++
 
-        let dataFormatada = '-'
-        let horaFormatada = '-'
+        const div = document.createElement('div')
+        div.style.cssText = `
+            border:1px solid #ccc;
+            padding:10px;
+            margin-bottom:20px;
+            border-radius:8px;
+        `
 
-        if (data.createdAt) {
-            const dataFirebase = new Date(data.createdAt)
-
-            dataFormatada = dataFirebase.toLocaleDateString('pt-BR')
-            horaFormatada = dataFirebase.toLocaleTimeString('pt-BR')
-        }
-
-        let tempoRestanteHTML = ''
-
+        // TEMPO
         if (status === 'reservado' && data.expiresAt) {
-            if (sistemaFechado()) {
-                tempoRestanteHTML = `
-                <div class="tempo" style="color: orange; font-weight: bold;">
-                Retoma às 07:30 ⏸
-                <br>
-                30 min após a retomada
-                </div>
-                <br>
-                `
-            } else {
-                const agora = Date.now()
-                const tempoRestante = data.expiresAt - agora
+            const tempoDiv = document.createElement('div')
+            tempoDiv.className = 'tempo'
+            tempoDiv.style.fontWeight = 'bold'
 
-                if (tempoRestante > 0) {
-                    const minutos = Math.floor(tempoRestante / 60000)
-                    const segundos = Math.floor((tempoRestante % 60000) / 1000)
+            if (sistemaFechado()) {
+                tempoDiv.style.color = 'orange'
+                tempoDiv.append(
+                    'Retoma às 07:30 ⏸',
+                    document.createElement('br'),
+                    '30 min após a retomada'
+                )
+            } else {
+                const restante = data.expiresAt - Date.now()
+
+                if (restante > 0) {
+                    const m = Math.floor(restante / 60000)
+                    const s = Math.floor((restante % 60000) / 1000)
 
                     let cor = 'green'
+                    if (restante < 300000) cor = 'red'
+                    else if (restante < 600000) cor = 'orange'
 
-                    if (tempoRestante < 300000) {
-                        cor = 'red'
-                    } else if (tempoRestante < 600000) {
-                        cor = 'orange'
-                    }
-
-                    tempoRestanteHTML = `
-                    <div class="tempo" style="color:${cor}; font-weight:bold;">
-                    ⏱️ Expira em: ${minutos}:${segundos.toString().padStart(2, '0')}
-                    </div>
-                    <br>
-                    `
+                    tempoDiv.style.color = cor
+                    tempoDiv.textContent = `⏱️ ${m}:${String(s).padStart(2, '0')}`
                 } else {
-                    tempoRestanteHTML = `
-                    <div class="tempo" style="color:red; font-weight:bold;">
-                    ⏱️ EXPIRADO
-                    </div>
-                    <br>
-                    `
+                    tempoDiv.style.color = 'red'
+                    tempoDiv.textContent = '⏱️ EXPIRADO'
                 }
             }
+
+            div.appendChild(tempoDiv)
+            div.appendChild(document.createElement('br'))
         }
 
-        const div = document.createElement('div')
+        // DADOS
+        function linha(label, valor) {
+            const strong = document.createElement('strong')
+            strong.textContent = label
 
-        div.style.border = '1px solid #ccc'
-        div.style.padding = '10px'
-        div.style.marginBottom = '20px'
-        div.style.borderRadius = '8px'
+            div.append(strong, ` ${valor}`, document.createElement('br'), document.createElement('br'))
+        }
 
-        let botoes = `
-        <button onclick="cancelar('${data.id}')">Cancelar</button>
-        `
+        const dataObj = data.createdAt ? new Date(data.createdAt) : null
+
+        linha('NÚMERO:', data.number)
+        linha('NOME:', data.name)
+        linha('TURMA:', (data.turma || '').toUpperCase())
+        linha('STATUS:', (data.status || '').toUpperCase())
+        linha('DATA:', dataObj ? dataObj.toLocaleDateString('pt-BR') : '-')
+        linha('HORA:', dataObj ? dataObj.toLocaleTimeString('pt-BR') : '-')
+
+        // BOTÕES
+        const btnContainer = document.createElement('div')
+
+        const criarBtn = (txt, fn) => {
+            const b = document.createElement('button')
+            b.textContent = txt
+            b.addEventListener('click', fn)
+            return b
+        }
 
         if (status === 'reservado') {
-            botoes = `
-            <button onclick="confirmar('${data.id}')">Confirmar pagamento</button>
-            <button onclick="cancelar('${data.id}')">Cancelar</button>
-            `
+            btnContainer.appendChild(
+                criarBtn('Confirmar pagamento', () => confirmar(data.id))
+            )
         }
 
-        div.innerHTML = `
-        ${tempoRestanteHTML}
-        <strong>NÚMERO:</strong> ${data.number}<br><br>
-        <strong>NOME:</strong> ${data.name}<br><br>
-        <strong>TURMA:</strong> ${data.turma.toUpperCase()}<br><br>
-        <strong>STATUS:</strong> ${data.status.toUpperCase()}<br><br>
-        <strong>DATA:</strong> ${dataFormatada}<br><br>
-        <strong>HORA:</strong> ${horaFormatada}
-        <br><br>
-        ${botoes}
-        `
+        btnContainer.appendChild(
+            criarBtn('Cancelar', () => cancelar(data.id))
+        )
+
+        div.appendChild(btnContainer)
 
         if (status === 'vendido')
             listaVendidos.appendChild(div)
@@ -213,61 +206,54 @@ function renderizarReservas(listaReservas) {
             listaReservados.appendChild(div)
     })
 
-    const disponiveis = qtdeNumeros - vendidos - reservados
-
-    stats.innerHTML = `
-    <p>Vendidos: <strong>${vendidos}</strong></p>
-    <p>Reservados: <strong>${reservados}</strong></p>
-    <p>Disponíveis: <strong>${disponiveis}</strong></p>
-    `
+    renderStats(vendidos, reservados)
 }
 
-// CONFIRMAR PAGAMENTO
-window.confirmar = async function (id) {
+// STATS
+function renderStats(vendidos, reservados) {
+    const disponiveis = qtdeNumeros - vendidos - reservados
+
+    stats.replaceChildren()
+
+    function item(label, valor) {
+        const p = document.createElement('p')
+        const strong = document.createElement('strong')
+        strong.textContent = valor
+        p.append(label + ' ', strong)
+        return p
+    }
+
+    stats.appendChild(item('Vendidos:', vendidos))
+    stats.appendChild(item('Reservados:', reservados))
+    stats.appendChild(item('Disponíveis:', disponiveis))
+}
+
+// AÇÕES
+async function confirmar(id) {
     try {
-        await updateDoc(doc(db, 'rifa', id), {
-            status: 'vendido'
-        })
+        await updateDoc(doc(db, 'rifa', id), { status: 'vendido' })
         alert('Pagamento confirmado!')
-    } catch (error) {
-        console.error(error)
-        alert('Erro ao confirmar pagamento.')
+    } catch {
+        alert('Erro ao confirmar.')
     }
 }
 
-// CANCELAR RESERVA
-window.cancelar = async function (id) {
-    const confirmar = confirm('Tem certeza que deseja cancelar esta reserva?')
-
-    if (!confirmar) return
+async function cancelar(id) {
+    if (!confirm('Cancelar reserva?')) return
 
     try {
         await deleteDoc(doc(db, 'rifa', id))
-        alert('Reserva cancelada!')
-    } catch (error) {
-        console.error(error)
-        alert('Erro ao cancelar reserva.')
+        alert('Cancelado!')
+    } catch {
+        alert('Erro ao cancelar.')
     }
 }
 
 // BUSCA
 searchInput.addEventListener('input', () => {
     termoBusca = searchInput.value.toUpperCase()
-
-    const filtrados = reservas.filter((r) =>
-        (r.name || '').toUpperCase().includes(termoBusca) ||
-        String(r.number || '').includes(termoBusca)
-    )
-
-    renderizarReservas(filtrados)
+    render()
 })
 
-// TIMER GLOBAL
-setInterval(() => {
-    const filtrados = reservas.filter((r) =>
-        (r.name || '').toUpperCase().includes(termoBusca) ||
-        String(r.number || '').includes(termoBusca)
-    )
-
-    renderizarReservas(filtrados)
-}, 1000)
+// TIMER (ainda simples, mas funcional)
+setInterval(render, 1000)
