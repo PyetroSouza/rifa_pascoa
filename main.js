@@ -412,7 +412,7 @@ buyBtn.addEventListener('click', async () => {
         confete()
 
         setTimeout(() => {
-            window.location.href = './pages/pagamento.html'
+            window.location.href = './pages/pagamento/pagamento.html'
         }, 2000)
     } catch {
         showToast('Um dos números já foi reservado.')
